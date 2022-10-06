@@ -1,0 +1,10 @@
+{
+    "name": "Sword, heavy",
+    "skill": "Fighting (sword)",
+    "damage": "1d8+1+DB",
+    "base_range": "touch",
+    "uses_per_round": 1,
+    "cost_20": 30,
+    "cost_modern": 75,
+    "common_era": ["1920","Modern"]
+}
