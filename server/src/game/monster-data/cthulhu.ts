@@ -2,6 +2,8 @@ import type { BaseMonster } from "./base";
 interface CthulhuInterface extends BaseMonster {
   abilities: {regeneration: {desc: string,func: () => number}, rebirth: {desc: string}}
 }
+
+
 export const cthulhu: CthulhuInterface = {
   name: "Great Cthulhu, Master of R'lyeh",
   str: 700,

@@ -1,26 +1,27 @@
-import { Client, GatewayIntentBits, Collection, Partials, SlashCommandBuilder, MessageInteraction, ChatInputCommandInteraction } from "discord.js";
+import { Client, GatewayIntentBits, Collection, Partials, SlashCommandBuilder, MessageInteraction, ChatInputCommandInteraction, Message } from "discord.js";
 import { loggingUtilWrapper, logger } from "../utilities/Logging";
+import sonic from "../local-events/index";
 import * as path from "node:path";
 import * as fs from "node:fs";
 import {register_commands} from "../RegisterCommands";
-require("dotenv").config();
+import * as dotenv from 'dotenv'
+dotenv.config({path:"c:/Users/AndrewKent/Documents/Development/call_of_cthulhu_vtt/server/src/.env"})
+
 
 const token = process.env.DISCORD_TOKEN;
 
-export declare interface KeeperClient {
-  client: Client;
-  commands: any;
-}
 
-interface CommandModule {
+export interface CommandModule {
   data: SlashCommandBuilder;
   description: string;
-  execute: (interaction: ChatInputCommandInteraction | MessageInteraction, commands?: any) => void;
+  execute: (interaction: ChatInputCommandInteraction | Message , commands?: any) => void;
 }
+
+export type CommandCollection = Collection<string,CommandModule>
 
 export class KeeperClient {
   client: Client;
-  commands: any;
+  commands:CommandCollection;
   constructor() {
     this.client = new Client({
       intents: [
@@ -71,21 +72,17 @@ export class KeeperClient {
       const event = require(filePath);
       if (event.once) {
         this.client.once(event.name, async (...args: any) => {
-          logger._debug("Discord event executing once",event.name);
-          event.execute(...args,logger, this.commands);
+          logger.debug("Discord event executing once",event.name);
+          event.execute(...args,logger,sonic);
         });
       } else {
         this.client.on(event.name, async (...args: any) => {
-          logger._debug("Discord event executing",event.name);
-          event.execute(...args, logger,this.commands);
+          logger.debug("Discord event executing",event.name);
+          event.execute(...args,logger,sonic);
         });
       }
     }
   }
 }
 
-const parts = new KeeperClient();
-
-export const keeper = loggingUtilWrapper(parts);
-
-keeper.init();
+export const keeper = loggingUtilWrapper(new KeeperClient());

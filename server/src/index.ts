@@ -4,10 +4,10 @@ import * as cors from "cors";
 const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 5000;
-
-import {config} from "dotenv";
-
-config();
+import {socketInit} from "../src/sockets/index";
+import { keeper } from "./discord";
+import * as dotenv from 'dotenv'
+dotenv.config({path:"c:/Users/AndrewKent/Documents/Development/call_of_cthulhu_vtt/server/src/.env"})
 
 app.use(
   cors.default({
@@ -17,6 +17,9 @@ app.use(
 );
 
 app.use(express.json());
+
+export const io = await socketInit(server)
+keeper.init()
 
 
 

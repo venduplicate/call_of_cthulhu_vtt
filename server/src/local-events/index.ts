@@ -1,7 +1,7 @@
 import { EventEmitter } from "node:events";
 import { Collection } from "discord.js";
 import { IntraServerEvents } from "./types";
-import { loggingUtilWrapper } from "../utilities/Logging";
+import { loggingUtilWrapper, logger } from "../utilities/Logging";
 import * as fs from "node:fs";
 import * as path from "node:path";
 
@@ -13,7 +13,7 @@ export interface CustomEvent {
 
 export type EventCollection = Collection<string, CustomEvent>;
 
-export declare interface SonicEmitter {
+export declare interface SonicEmitter extends EventEmitter {
   on<U extends keyof IntraServerEvents>(
     event: U,
     listener: IntraServerEvents[U]
@@ -50,8 +50,7 @@ export class SonicEmitter extends EventEmitter {
 }
 
 
-const parts = new SonicEmitter();
 
-const sonic = loggingUtilWrapper(parts);
+const sonic = loggingUtilWrapper(new SonicEmitter());
 
 export default sonic;

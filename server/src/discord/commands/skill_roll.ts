@@ -1,12 +1,12 @@
 const { SlashCommandBuilder } = require("discord.js");
 import {ChatInputCommandInteraction, Collection} from "discord.js";
 import winston from "winston"
-import type {SonicEmitter} from "../src/local-events/index"
-import {CommandCollection} from "../src/discord/index";
+import type {SonicEmitter} from "../../local-events/index"
+import {CommandCollection} from "../index";
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("name")
+    .setName("skill_roll")
     .setDescription("Description Here"),
   description: "Describe in more detail",
   async execute(interaction: ChatInputCommandInteraction,sonic: SonicEmitter,logger: winston.Logger, commands:CommandCollection ) {

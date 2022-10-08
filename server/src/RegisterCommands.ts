@@ -2,8 +2,9 @@ const fs = require("fs");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require('discord.js');
 const path = require("path");
+import * as dotenv from 'dotenv'
+dotenv.config({path:"c:/Users/AndrewKent/Documents/Development/call_of_cthulhu_vtt/server/src/.env"})
 
-require("dotenv").config();
 
 const clientId = process.env.CLIENT_ID;
 const guildID = process.env.GUILD_ID;
