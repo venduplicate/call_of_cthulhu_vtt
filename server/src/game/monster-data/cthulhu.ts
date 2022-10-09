@@ -1,11 +1,9 @@
 import { InvestigatorFirestore } from "@/data/schemas/Investigator.js";
 import { MonsterBase } from "./MonsterBase.js";
 import { MonsterFirestoreInterface } from "@/data/schemas/Monster.js";
-import { MonsterError } from "@/errors/MonsterErrors.js";
 import {roller} from "../../utilities/DiceRoll.js";
 
-
-export class Cthulhu extends MonsterBase {
+export default class Cthulhu extends MonsterBase {
   constructor(data: MonsterFirestoreInterface){
     super(data)
   }

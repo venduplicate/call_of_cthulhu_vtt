@@ -26,7 +26,7 @@ export class SpellSchema {
     }
 }
 
-const SpellConverter = {
+export const SpellConverter = {
     toFirestore: function(data:SpellFirestoreInterface){
         return {...data}
     },
