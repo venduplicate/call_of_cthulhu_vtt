@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
-import type { KeeperClient } from "../index";
-import type { SonicEmitter } from "../../local-events/index";
+import type { KeeperClient } from "../index.js";
+import type { SonicEmitter } from "../../local-events/index.js";
 import winston from "winston";
 
 const diceRegex = /^(\/|\/[a-z]|\/[A-Z]|r)*\s*(\d)*\s*([d|D])([\d])+/

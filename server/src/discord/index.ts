@@ -1,9 +1,9 @@
 import { Client, GatewayIntentBits, Collection, Partials, SlashCommandBuilder, MessageInteraction, ChatInputCommandInteraction, Message } from "discord.js";
-import { loggingUtilWrapper, logger } from "../utilities/Logging";
-import sonic from "../local-events/index";
+import { loggingUtilWrapper, logger } from "../utilities/Logging.js";
+import sonic from "../local-events/index.js";
 import * as path from "node:path";
 import * as fs from "node:fs";
-import {register_commands} from "../RegisterCommands";
+import {register_commands} from "../RegisterCommands.js";
 import * as dotenv from 'dotenv'
 dotenv.config({path:"c:/Users/AndrewKent/Documents/Development/call_of_cthulhu_vtt/server/src/.env"})
 

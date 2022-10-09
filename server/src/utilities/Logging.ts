@@ -2,8 +2,8 @@
 import winston from "winston";
 import { Logtail } from "@logtail/node";
 import { LogtailTransport } from "@logtail/winston";
-import { config } from "dotenv";
-config();
+import * as dotenv from 'dotenv'
+dotenv.config({path:"c:/Users/AndrewKent/Documents/Development/call_of_cthulhu_vtt/server/src/.env"})
 
 const logKey = process.env.LOGTAIL_TOKEN as string;
 

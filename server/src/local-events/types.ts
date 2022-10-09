@@ -1,6 +1,7 @@
 import type { KeeperClient } from "../discord";
-import type { IOServer } from "src/sockets/types";
+import type { IOServer } from "src/sockets/types.js";
 import type { RedisClientType } from "redis";
+import type {RedisRollLogger} from "../utilities/DiceRoll.js"
 
 export interface IntraServerEvents {
     'error': (callback: (error:unknown) => void) => void;
@@ -11,4 +12,5 @@ export interface IntraServerEvents {
     'getKeeperClient': (callback: (data: KeeperClient) => Promise<void>) => void;
     'getSpell': (callback: (data: any) => Promise<void>) => void;
     'getRedis': (callback: (data: RedisClientType) => Promise<void>) => void;
+    "getRedisRollLogger": (callback: (data: RedisRollLogger) => void) => void;
   }

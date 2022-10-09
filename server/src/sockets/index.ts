@@ -2,15 +2,14 @@ import { type Socket, Server } from "socket.io";
 import { Collection } from "discord.js";
 import * as path from "node:path";
 import * as fs from "node:fs";
-import { logger } from "../utilities/Logging";
+import { logger } from "../utilities/Logging.js";
 import * as http from "http";
 import * as dotenv from 'dotenv'
 dotenv.config({path:"c:/Users/AndrewKent/Documents/Development/call_of_cthulhu_vtt/server/src/.env"})
+import sonic from "../local-events/index.js"
 
 
 const socketFiles = new Collection()
-
-
 
 async function initRegisterSockets() {
     logger.info("initiating registering sockets to collection")
@@ -43,7 +42,7 @@ function onConnection(socket: Socket) {
     socketFiles.each((item: any) => {
       socket.on(item.name, (...args: any) => {
         logger.debug(`executing event ${item.name}`, item.name);
-        item.execute(socket, ...args);
+        item.execute(socket,sonic, ...args);
       });
     })
   }

@@ -1,7 +1,7 @@
 import { EventEmitter } from "node:events";
 import { Collection } from "discord.js";
 import { IntraServerEvents } from "./types";
-import { loggingUtilWrapper, logger } from "../utilities/Logging";
+import { loggingUtilWrapper, logger } from "../utilities/Logging.js";
 import * as fs from "node:fs";
 import * as path from "node:path";
 
@@ -32,7 +32,7 @@ export class SonicEmitter extends EventEmitter {
     this.events = new Collection();
   }
   init() {
-    const eventsPath = path.join(__dirname, "files");
+    const eventsPath = path.join(__dirname, "events");
     const eventFiles = fs
       .readdirSync(eventsPath)
       .filter((file: any) => file.endsWith(".js"));

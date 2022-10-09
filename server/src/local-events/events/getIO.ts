@@ -1,4 +1,4 @@
-import { io } from "src/index";
+import { io } from "../../index.js";
 
 
 module.exports = {

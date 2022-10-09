@@ -1,6 +1,5 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import type { SonicEmitter } from "src/local-events";
-import type { CommandCollection} from "src/discord/index";
+import { CommandInteraction, SlashCommandBuilder } from "discord.js";
+import type { SonicEmitter } from "../../local-events/index.js";
 import winston from "winston";
 import * as dotenv from 'dotenv'
 dotenv.config({path:"c:/Users/AndrewKent/Documents/Development/call_of_cthulhu_vtt/server/src/.env"})
@@ -11,7 +10,7 @@ module.exports = {
     .setDescription("Get the link for the web component."),
   description: `Get the link to your session's web page component.`,
   async execute(
-    interaction: ChatInputCommandInteraction, sonic: SonicEmitter, logger: winston.Logger
+    interaction: CommandInteraction, sonic: SonicEmitter, logger: winston.Logger
   ) {
     if (interaction.channel == null) return;
     const sessionId = interaction.channel.id;

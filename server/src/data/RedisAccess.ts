@@ -4,6 +4,8 @@ dotenv.config({path:"c:/Users/AndrewKent/Documents/Development/call_of_cthulhu_v
 
 const redisURL = process.env.REDISCLOUD_URL
 
+console.log(redisURL)
+
 // for now, only need redisClient variable
 // if there are common functions between processes, then we should make this the single source of truth for those. 
 // for now, that's not needed I think. 
