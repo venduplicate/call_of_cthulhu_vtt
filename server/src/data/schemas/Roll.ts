@@ -23,6 +23,6 @@ export const RollConverter = {
     },
     fromFirestore: function(snapshot: FirebaseFirestore.QueryDocumentSnapshot){
         const {name,id,notation} = snapshot.data() as CustomRoll;
-        return new RollSchema(name,id,notation);
+        return new RollSchema(id,name,notation);
     }
 }

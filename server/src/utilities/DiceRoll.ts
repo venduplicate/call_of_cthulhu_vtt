@@ -1,7 +1,7 @@
 import { DiceRoller, DiceRoll, NumberGenerator } from "@dice-roller/rpg-dice-roller";
 import { Collection } from "discord.js";
 import { loggingUtilWrapper } from "./Logging.js"
-import { redisClient } from "../data/RedisAccess.js";
+import { redisClient } from "../data/redis/RedisAccess.js";
 
 const textRegex = /[\s+]+[a-zA-Z]+'?[a-zA-Z]+/g
 const percentileRegex = /(d%|d100)/gi

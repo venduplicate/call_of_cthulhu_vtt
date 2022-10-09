@@ -1,4 +1,4 @@
-import Cthulhu from "./cthulhu"
+import Cthulhu from "./Cthulhu"
 
 const MonsterObject = {
     "Cthulhu": Cthulhu,

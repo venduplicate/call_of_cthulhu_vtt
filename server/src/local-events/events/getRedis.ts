@@ -1,4 +1,4 @@
-import {redisClient} from "../../data/RedisAccess.js";
+import {redisClient} from "../../data/redis/RedisAccess.js";
 
 
 module.exports = {
