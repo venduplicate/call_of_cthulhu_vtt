@@ -27,11 +27,11 @@ export class SpellSchema {
 }
 
 const SpellConverter = {
-    toFirestore: function(data:e){
+    toFirestore: function(data:SpellFirestoreInterface){
         return {...data}
     },
     fromFirestore: function(snapshot: FirebaseFirestore.QueryDocumentSnapshot){
-        const data = snapshot.data() as MonsterFirestoreInterface;
-        return new MonsterSchema(data);
+        const data = snapshot.data() as SpellFirestoreInterface;
+        return new SpellSchema(data);
     }
 }
