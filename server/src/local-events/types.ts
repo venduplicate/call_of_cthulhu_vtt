@@ -2,6 +2,7 @@ import type { KeeperClient } from "../discord";
 import type { IOServer } from "src/sockets/types.js";
 import type { RedisClientType } from "redis";
 import type {RedisRollLogger} from "../utilities/DiceRoll.js"
+import SessionCustomRoll from "@/data/firestore/SessionCustomRoll";
 
 export interface IntraServerEvents {
     'error': (callback: (error:unknown) => void) => void;
@@ -13,4 +14,5 @@ export interface IntraServerEvents {
     'getSpell': (callback: (data: any) => Promise<void>) => void;
     'getRedis': (callback: (data: RedisClientType) => Promise<void>) => void;
     "getRedisRollLogger": (callback: (data: RedisRollLogger) => void) => void;
+    "getCustomRollFirestore": (callback: (data: SessionCustomRoll) => void) => void;
   }

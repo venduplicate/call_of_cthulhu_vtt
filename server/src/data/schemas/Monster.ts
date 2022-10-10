@@ -96,3 +96,7 @@ export const MonsterConverter = {
       return new MonsterSchema(data);
   }
 }
+
+export const MonsterRedisConvert = {
+  
+}

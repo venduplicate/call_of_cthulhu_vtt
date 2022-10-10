@@ -1,12 +1,14 @@
 import { SessionBase } from "./SessionBase.js"
-import { RollSchema, CustomRoll, RollConverter } from "../schemas/Roll.js";
+import { CustomRoll, RollConverter } from "../schemas/Roll.js";
 import { logger } from "@/utilities/Logging.js";
 
 export default class SessionCustomRoll extends SessionBase {
     custom_rolls: string;
+    converter: typeof RollConverter;
     constructor() {
         super()
         this.custom_rolls = "custom_rolls"
+        this.converter = RollConverter;
     }
     getRollRef(sessionId: string) {
         return this.getSessionRef(sessionId).collection(this.custom_rolls)
@@ -28,7 +30,7 @@ export default class SessionCustomRoll extends SessionBase {
     async updateRoll(sessionId: string, investigatorId: string, rollData: CustomRoll) {
         try {
             const rollRef = this.getInvestigatorRollRef(sessionId, investigatorId).collection(this.custom_rolls).doc(rollData.id)
-            this.setDocData(RollConverter,rollRef,rollData)
+            this.setDocData(this.converter,rollRef,rollData)
             return { error: null, success: true }
         }
         catch (error) {

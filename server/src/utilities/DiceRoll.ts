@@ -1,7 +1,7 @@
 import { DiceRoller, DiceRoll, NumberGenerator } from "@dice-roller/rpg-dice-roller";
 import { Collection } from "discord.js";
 import { loggingUtilWrapper } from "./Logging.js"
-import { redisClient } from "../data/redis/RedisAccess.js";
+import { redisClient } from "../data/redis/RedisBase.js";
 
 const textRegex = /[\s+]+[a-zA-Z]+'?[a-zA-Z]+/g
 const percentileRegex = /(d%|d100)/gi
@@ -179,10 +179,10 @@ export class DiceHandler extends RedisRollLogger {
     const found = notation.match(textRegex);
 
     if (found != null) {
-      for (let x = 0; x < found.length; x++) {
-        notation = notation.replace(found[x], "")
+      for (const item of found) {
+        notation = notation.replace(item, "")
       }
-      notation.trim()
+      notation = notation.trim()
     }
 
     return { dice: notation, comment: found }

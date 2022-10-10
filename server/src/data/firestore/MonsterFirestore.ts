@@ -1,6 +1,5 @@
 import DBBase from "./DBBase";
-import { MonsterConverter, MonsterSchema } from "../schemas/Monster";
-import { SuccessorFailureObject } from "../types";
+import { MonsterConverter } from "../schemas/Monster";
 export class MonsterFirestore extends DBBase {
     monsters: string;
     constructor(){
