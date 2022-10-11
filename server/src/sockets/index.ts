@@ -61,3 +61,21 @@ export async function socketInit(server: http.Server<typeof http.IncomingMessage
 
     return io;
 }
+
+// const jwtSecret = process.env.JWT_SECRET;
+// const expirationString = "1h";
+
+// export async function signJWT(clientToken: string){
+//   const token = jwt.sign({data: {token: }},jwtSecret,{expiresIn: expirationString})
+//   return token
+// }
+
+// export function jwtAuth(socket: Socket, next: (err?: ExtendedError | undefined) => void){
+//   const token = socket.data.token;
+//   if (token == null) {
+//     socket.emit("invalidAuth")
+//     next(new Error("Invalid auth, "))
+//   }
+//   const verified = jwt.verify(token,jwtSecret)
+//   next(verified)
+// }

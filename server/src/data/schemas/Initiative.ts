@@ -6,33 +6,52 @@ interface StatusEffectInterface extends SchemaBase {
     description: string;
 }
 
-interface InitiativeModifier extends SchemaBase {
-    modifier_number: number;
-    source: string;
+interface FirearmCombatStats {
+    hasFirearm: boolean;
+    needsReload: boolean;
 }
 
 export interface InitiativeInterface extends SchemaBase {
-    player_id: string;
     round_order: number;
+    player_id: string;
     status_effects: StatusEffectInterface[];
-    initiative_base: number;
-    modifiers: InitiativeModifier[]
+    dex_modifier: number;
+    firearm: FirearmCombatStats;
+    isCurrentTurn: boolean;
+    combat_modifier: number
 }
 
 export class InitiativeSchema {
     id: string;
-    player_id: string;
     round_order: number;
+    player_id: string;
     status_effects: StatusEffectInterface[];
-    initiative_base: number;
-    modifiers: InitiativeModifier[]
+    dex_modifier: number;
+    firearm: FirearmCombatStats;
+    isCurrentTurn: boolean;
+    combat_modifier: number
     constructor(data: InitiativeInterface){
         this.id = data.id;
+        this.round_order = data.round_order
         this.player_id = data.player_id;
-        this.round_order = data.round_order;
         this.status_effects = data.status_effects;
-        this.initiative_base = data.initiative_base;
-        this.modifiers = data.modifiers;
+        this.dex_modifier = data.dex_modifier;
+        this.firearm = data.firearm;
+        this.isCurrentTurn = data.isCurrentTurn;
+        this.combat_modifier = data.combat_modifier;
+    }
+    toObject(){
+        const dataObject = {
+            id: this.id,
+            player_id: this.player_id,
+            status_effects: this.status_effects,
+            dex_modifier: this.dex_modifier,
+            firearm: this.firearm,
+            isCurrentTurn: this.isCurrentTurn,
+            combat_modifier: this.combat_modifier,
+            round_order: this.round_order
+        } 
+        return dataObject as InitiativeInterface;
     }
 }
 

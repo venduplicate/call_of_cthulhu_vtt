@@ -46,7 +46,7 @@ const skills = [
     {name: "Track", base:10},
 ]
 
-const skillList = [
+export const list_of_skills = [
     "Accounting",
     "Animal Handling",
     "Anthropology",
@@ -134,4 +134,4 @@ const skillList = [
     "Science: Meteorology",
     "MODERN ONLY: Computer Use",
     "MODERN ONLY: Electronics"
-  ]
+  ] as const;

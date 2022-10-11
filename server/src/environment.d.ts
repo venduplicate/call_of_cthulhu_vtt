@@ -16,6 +16,7 @@ declare global {
             HOST_URL: string;
             REDISCLOUD_URL: string;
             FIREBASE_JSON: string;
+            JWT_SECRET: string;
         }
     }
 }
