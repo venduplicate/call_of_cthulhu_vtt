@@ -4,34 +4,35 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord.js";
 import path from "node:path";
+import {
+  createDirName,
+  createPath,
+  getFiles,
+  getDefaultData,
+} from "../utilities/PathCreation.js";
 
 let clientId = "";
-let guildId = ""
-let token = ""
+let guildId = "";
+let token = "";
 
-if (process.env.GUILD_ID != undefined){
+if (process.env.GUILD_ID != undefined) {
   guildId = process.env.GUILD_ID;
 }
-if (process.env.DISCORD_TOKEN != undefined){
+if (process.env.DISCORD_TOKEN != undefined) {
   token = process.env.DISCORD_TOKEN;
 }
-if (process.env.CLIENT_ID != undefined){
+if (process.env.CLIENT_ID != undefined) {
   clientId = process.env.CLIENT_ID;
 }
 
 export async function register_commands() {
-  console.log("register commands init init");
   const commands = [];
-  const __dirname = path.dirname(fileURLToPath(import.meta.url))
-  const commandsPath = path.join(__dirname, "commands");
-  const commandFiles = fs
-    .readdirSync(commandsPath)
-    .filter((file: string) => file.endsWith(".js"));
+  const commandsPath = createPath(createDirName(import.meta.url), "commands");
+  const commandFiles = await getFiles(import.meta.url, "commands");
 
   for (const file of commandFiles) {
-    const filePath = path.join(commandsPath, file);
-    const command = await import(pathToFileURL(filePath).toString())
-    commands.push(command.default.data.toJSON());
+    const command = await getDefaultData(commandsPath, file);
+    commands.push(command.data.toJSON());
   }
 
   const rest = new REST({ version: "10" }).setToken(token);

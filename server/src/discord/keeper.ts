@@ -10,12 +10,16 @@ import {
 } from "discord.js";
 import { loggingUtilWrapper, logger } from "../utilities/Logging.js";
 import sonic, { SonicEmitter } from "../local-events/sonic.js";
-import path from "node:path";
-import fs from "node:fs";
 import { register_commands } from "./RegisterCommands.js";
 import winston from "winston";
 import * as dotenv from "dotenv";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import {
+  createDirName,
+  createPath,
+  getFiles,
+  getDefaultData,
+} from "../utilities/PathCreation.js";
+import type { EventFileBase } from "./types";
 dotenv.config({
   path: "c:/Users/AndrewKent/Documents/Development/call_of_cthulhu_vtt/server/src/.env",
 });
@@ -72,15 +76,13 @@ export class KeeperClient {
   async initCommands(): Promise<void> {
     console.log(process.cwd());
     try {
-      const __dirname = path.dirname(fileURLToPath(import.meta.url));
-      const commandsPath = path.join(__dirname, "commands");
-      const commandFiles = fs
-        .readdirSync(commandsPath)
-        .filter((file: string) => file.endsWith(".js"));
+      const commandsPath = createPath(
+        createDirName(import.meta.url),
+        "commands"
+      );
+      const commandFiles = await getFiles(import.meta.url, "commands");
       for (const file of commandFiles) {
-        const filePath = path.join(commandsPath, file);
-        const data = await import(pathToFileURL(filePath).toString());
-        const command = data.default;
+        const command: CommandModule = await getDefaultData(commandsPath, file);
         this.commands.set(command.data.name, command);
       }
       register_commands();
@@ -89,25 +91,20 @@ export class KeeperClient {
     }
   }
   async initEvents(): Promise<void> {
-    const __dirname = path.dirname(fileURLToPath(import.meta.url));
-    const eventsPath = path.join(__dirname, "events");
-    const eventFiles = fs
-      .readdirSync(eventsPath)
-      .filter((file: string) => file.endsWith(".js"));
+    const eventsPath = createPath(createDirName(import.meta.url), "events");
+    const eventFiles = await getFiles(import.meta.url, "events");
 
     for (const file of eventFiles) {
-      const filePath = path.join(eventsPath, file);
-      const data = await import(pathToFileURL(filePath).toString());
-      const event = data.default;
+      const event: EventFileBase = await getDefaultData(eventsPath, file);
       if (event.once) {
-        this.client.once(event.name, async (...args: any) => {
+        this.client.once(event.name, async (...args: unknown[]) => {
           logger.debug("Discord event executing once", event.name);
-          event.execute(...args, logger, sonic, this.commands);
+          event.execute(args, sonic, logger, this.commands);
         });
       } else {
-        this.client.on(event.name, async (...args: any) => {
+        this.client.on(event.name, async (...args: unknown[]) => {
           logger.debug("Discord event executing", event.name);
-          event.execute(...args, logger, sonic, this.commands);
+          event.execute(args, sonic, logger, this.commands);
         });
       }
     }

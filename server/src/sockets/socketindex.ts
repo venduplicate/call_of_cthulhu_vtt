@@ -8,23 +8,22 @@ import http from "http";
 import sonic from "../local-events/sonic.js";
 import { FileBase, IOServer } from "./types.js";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import {
+  createDirName,
+  createPath,
+  getFiles,
+  getDefaultData,
+} from "../utilities/PathCreation.js";
 const socketFiles: Collection<string, FileBase> = new Collection();
 
 async function initRegisterSockets() {
   try {
     logger.info("initiating registering sockets to collection");
-    const __dirname = path.dirname(fileURLToPath(import.meta.url));
-    const socketsPath = path.join(__dirname, "events");
-    const eventFiles = fs
-      .readdirSync(socketsPath)
-      .filter((file: string) => file.endsWith(".js"));
-
+    const socketsPath = createPath(createDirName(import.meta.url), "events");
+    const eventFiles = await getFiles(import.meta.url, "events");
     for (const file of eventFiles) {
-      const filePath = path.join(socketsPath, file);
-      const data = await import(pathToFileURL(filePath).toString());
-      const event = data.default;
-
-      socketFiles.set(event.name, event.default);
+      const event = await getDefaultData(socketsPath, file);
+      socketFiles.set(event.name, event);
     }
   } catch (error) {
     console.log(error, "registersockets");

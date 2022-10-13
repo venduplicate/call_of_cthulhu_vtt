@@ -7,6 +7,7 @@ import {
   InitiativeInterface,
   InitiativeMap,
   InitiativeSchema,
+  PlayerArray
 } from "../schemas/Initiative.js";
 
 export class InitiativeFirestore extends SessionBase {
@@ -94,6 +95,17 @@ export class InitiativeFirestore extends SessionBase {
     });
 
     return initiativeArray;
+  }
+  async getPlayerNames(sessionId: string) {
+    const initiativeArray = await this.getAllInitiative(sessionId);
+    const playerArray: PlayerArray = [];
+    initiativeArray.forEach((doc: InitiativeInterface) => {
+      playerArray.push({
+        investigatorId: doc.investigator_id,
+        name: doc.investigator_name,
+      });
+    });
+    return playerArray;
   }
 }
 

@@ -24,12 +24,10 @@ export class RedisBase {
   redisClient: typeof redisClient;
   expirationInSeconds: number;
   nearExpiration: number;
-  sonic: SonicEmitter;
-  constructor(sonic: SonicEmitter) {
+  constructor() {
     this.redisClient = redisClient;
     this.expirationInSeconds = 1800;
     this.nearExpiration = 100;
-    this.sonic = sonic;
   }
   getKey(key: string, id: string) {
     return `${id}-${key}`;

@@ -3,9 +3,13 @@ import { EventEmitter } from "node:events";
 import { Collection } from "discord.js";
 import { IntraServerEvents } from "./types";
 import { loggingUtilWrapper, logger } from "../utilities/Logging.js";
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import {
+  createDirName,
+  createPath,
+  getFiles,
+  getDefaultData,
+} from "../utilities/PathCreation.js";
+import { v4 } from "uuid";
 
 export interface CustomEvent {
   name: string;
@@ -35,18 +39,13 @@ export class SonicEmitter extends EventEmitter {
   }
   async init() {
     try {
-      const __dirname = path.dirname(fileURLToPath(import.meta.url));
-      const eventsPath = path.join(__dirname, "events");
-      const eventFiles = fs
-        .readdirSync(eventsPath)
-        .filter((file: string) => file.endsWith(".js"));
-
+      const eventsPath = createPath(createDirName(import.meta.url), "events");
+      const eventFiles = await getFiles(import.meta.url, "events");
       for (const file of eventFiles) {
-        const filePath = path.join(eventsPath, file);
-        const data = await import(pathToFileURL(filePath).toString());
-        const event = data.default;
-        console.log(event)
+        const event = await getDefaultData(eventsPath, file);
+        if (event == undefined) continue;
         if (event.once) {
+          console.log(event);
           this.once(event.name, (...args: unknown[]) => event.execute(...args));
         } else {
           this.on(event.name, (...args: unknown[]) => event.execute(...args));
@@ -55,6 +54,9 @@ export class SonicEmitter extends EventEmitter {
     } catch (error) {
       console.log(error, "sonic init");
     }
+  }
+  createUUID() {
+    return v4();
   }
 }
 

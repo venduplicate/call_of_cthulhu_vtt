@@ -1,8 +1,10 @@
 import { SessionBase } from "./SessionBase.js";
 import { CustomRoll, RollConverter } from "../schemas/Roll.js";
 import { logger } from "../../utilities/Logging.js";
+import { v4 } from "uuid";
+import { loggingUtilWrapper } from "../../utilities/Logging.js";
 
-export default class SessionCustomRoll extends SessionBase {
+export class CustomRollFireStore extends SessionBase {
   custom_rolls: string;
   converter: typeof RollConverter;
   constructor() {
@@ -55,4 +57,20 @@ export default class SessionCustomRoll extends SessionBase {
       return { error: error, success: false };
     }
   }
+  async addRoll(sessionId: string, rollData: CustomRoll) {
+    try {
+      rollData.id = v4();
+      const ref = this.getInvestigatorRollRef(
+        sessionId,
+        rollData.investigatorId
+      );
+      this.setDocData(RollConverter, ref, rollData);
+      return true;
+    } catch (error) {
+      logger.alert(error);
+      return error;
+    }
+  }
 }
+
+export const customRollHandler = loggingUtilWrapper(new CustomRollFireStore());

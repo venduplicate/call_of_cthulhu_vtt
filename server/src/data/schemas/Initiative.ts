@@ -12,8 +12,9 @@ interface FirearmCombatStats {
 }
 
 export interface InitiativeInterface extends SchemaBase {
+  investigator_name: string;
   round_order: number;
-  player_id: string;
+  investigator_id: string;
   status_effects: StatusEffectInterface[];
   dex_modifier: number;
   firearm: FirearmCombatStats;
@@ -24,19 +25,24 @@ export interface InitiativeInterface extends SchemaBase {
 export type InitiativeMap = Map<number, InitiativeInterface>;
 export type InitiativeArray = Array<InitiativeInterface>;
 
+export type PlayerObject = { investigatorId: string; name: string }
+
+export type PlayerArray = Array<PlayerObject>
 export class InitiativeSchema implements InitiativeInterface {
+  investigator_name: string;
   id: string;
   round_order: number;
-  player_id: string;
+  investigator_id: string;
   status_effects: StatusEffectInterface[];
   dex_modifier: number;
   firearm: FirearmCombatStats;
   isCurrentTurn: boolean;
   combat_modifier: number;
   constructor(data: InitiativeInterface) {
+    this.investigator_name = data.investigator_name
     this.id = data.id;
     this.round_order = data.round_order;
-    this.player_id = data.player_id;
+    this.investigator_id = data.investigator_id;
     this.status_effects = data.status_effects;
     this.dex_modifier = data.dex_modifier;
     this.firearm = data.firearm;
@@ -48,7 +54,7 @@ export class InitiativeSchema implements InitiativeInterface {
 export function initiativeSchemaToOjbect(data: InitiativeSchema) {
   const dataObject = {
     id: data.id,
-    player_id: data.player_id,
+    investigator_id: data.investigator_id,
     status_effects: data.status_effects,
     dex_modifier: data.dex_modifier,
     firearm: data.firearm,
