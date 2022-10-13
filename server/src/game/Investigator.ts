@@ -1,7 +1,7 @@
-import { InitiativeInterface } from "@/data/schemas/Initiative";
-import {CharacteristicList, Skill, Skills, Weapon } from "@/data/schemas/Investigator";
-import { InvestigatorFirestore } from "@/data/schemas/Investigator";
-import { roller } from "@/utilities/DiceRoll";
+import { InitiativeInterface } from "../data/schemas/Initiative";
+import {CharacteristicList, Skill, Skills, Weapon } from "../data/schemas/Investigator";
+import { InvestigatorFirestore } from "../data/schemas/Investigator";
+import { roller } from "../utilities/DiceRoll";
 
 const combatStats = ["Firearms", "Fighting", "Dodge"];
 

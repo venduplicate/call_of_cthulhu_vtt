@@ -1,7 +1,7 @@
 import {redisClient} from "../../data/redis/RedisBase.js";
 
 
-module.exports = {
+export default {
   name: "getRedis",
   once: false,
   async execute(callback: (client: typeof redisClient) => void) {

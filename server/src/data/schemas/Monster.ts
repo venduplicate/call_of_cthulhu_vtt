@@ -24,8 +24,8 @@ export interface MonsterFirestoreInterface extends SchemaBase {
     attacks: any[];
     armor: number;
   };
-  abilities: any,
-  spells: string,
+  abilities: any;
+  spells: string;
   sanity_loss_success: string;
   sanity_loss_failure: string;
   attacks_complete: number;
@@ -75,7 +75,7 @@ export class MonsterSchema {
     this.damage_bonus = data.damage_bonus;
     this.magic_points = data.magic_points;
     this.build = data.build;
-    this.move = data.move
+    this.move = data.move;
     this.swim = data.swim ? data.swim : 0;
     this.fly = data.fly ? data.fly : 0;
     this.combat = data.combat ? data.combat : undefined;
@@ -88,15 +88,13 @@ export class MonsterSchema {
 }
 
 export const MonsterConverter = {
-  toFirestore: function(data: MonsterFirestoreInterface){
-      return {...data}
+  toFirestore: function (data: MonsterFirestoreInterface) {
+    return { ...data };
   },
-  fromFirestore: function(snapshot: FirebaseFirestore.QueryDocumentSnapshot){
-      const data = snapshot.data() as MonsterFirestoreInterface;
-      return new MonsterSchema(data);
-  }
-}
+  fromFirestore: function (snapshot: FirebaseFirestore.QueryDocumentSnapshot) {
+    const data = snapshot.data() as MonsterFirestoreInterface;
+    return new MonsterSchema(data);
+  },
+};
 
-export const MonsterRedisConvert = {
-  
-}
+export const MonsterRedisConvert = {};

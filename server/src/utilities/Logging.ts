@@ -1,72 +1,60 @@
-// const { Logtail } = require("@logtail/node");
+import * as dotenv from "dotenv";
+dotenv.config({
+  debug: true,
+  path: "c:/Users/Eleven/Documents/Development/call_of_cthulhu_vtt/server/src/.env",
+});
 import winston from "winston";
 import { Logtail } from "@logtail/node";
 import { LogtailTransport } from "@logtail/winston";
-import * as dotenv from 'dotenv'
-dotenv.config({path:"c:/Users/AndrewKent/Documents/Development/call_of_cthulhu_vtt/server/src/.env"})
+
+console.log(process.env.LOGTAIL_TOKEN)
 
 const logKey = process.env.LOGTAIL_TOKEN as string;
 
-const logTail = new Logtail(logKey)
+const logTail = new Logtail(logKey);
 
 export const logger = winston.createLogger({
   transports: [new LogtailTransport(logTail)],
 });
 
-
-
-interface ClassObject {
-  name: string;
-  testFunc: () => void;
-}
-
-function functionHandler<T extends Object>(value: Function, target: T, receiver: any) {
+// eslint-disable-next-line @typescript-eslint/ban-types
+function functionHandler<T extends Object>(
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  value: Function,
+  target: T,
+  receiver: any
+) {
   return function (this: unknown, ...args: never[]) {
     const start = new Date().getTime();
     try {
-      console.log(`initiating ${value.name}`)
-      // logger.info(`initiating ${value}`, `${value}`, ...args);
+      logger.info(`initiating ${value}`, `${value}`, ...args);
       return value.apply(this === receiver ? target : this, args);
     } catch (error) {
       if (error instanceof Error) {
-        console.log(error)
-        // logger.alert(error.message, error.name, `${value}`, ...args);
+        console.log(error);
+        logger.alert(error.message, error.name, `${value}`, ...args);
       }
       return error;
-    }
-    finally {
+    } finally {
       const end = new Date().getTime();
-      console.log('Function Time Trace', `${value.name}`, { start: start, end: end, total: end - start })
-      // logger.info('Function Time Trace',`${value}`,{start:start,end:end,total: end-start})
+      logger.info('Function Time Trace',`${value}`,{start:start,end:end,total: end-start})
     }
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function loggingUtilWrapper<T extends Object>(obj: T) {
   return new Proxy(obj, {
     get(target, prop, receiver) {
       const value = target[prop as keyof T];
 
-      // logger.info(`retrieving ${target}`)
+      logger.info(`retrieving ${target}`)
 
       if (value instanceof Function) {
-        console.log("is a function")
-        // logger.info(`${value} is function`)
-        return  functionHandler(value, target, receiver);
-        
-
+        logger.info(`${value} is function`)
+        return functionHandler(value, target, receiver);
       }
       return value;
     },
   });
 }
-
-class myTestClass {
-  logStuff() {
-    console.log("logging test through proxy")
-  }
-}
-
-const myClassObj = loggingUtilWrapper(new myTestClass());
-
-myClassObj.logStuff();

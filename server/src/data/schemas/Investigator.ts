@@ -1,4 +1,4 @@
-import { list_of_skills } from "@/game/static/skills";
+import { list_of_skills } from "../../game/static/skills";
 import { SchemaBase } from "./SchemaBase";
 
 export interface Base extends SchemaBase {
@@ -12,7 +12,7 @@ export interface Base extends SchemaBase {
   birthplace: string;
 }
 
-export type InsanityTypes = "temporary" | "indefinite" | "permanent"
+export type InsanityTypes = "temporary" | "indefinite" | "permanent";
 
 export interface Characteristic {
   reg: number;
@@ -25,7 +25,14 @@ export interface Skill extends Characteristic {
   hasImproved: boolean;
 }
 
-type WeaponTypes = "firearm" | "fighting" | "throw" | "artillery" | "unnarmed" | "demolitions" | "electrical repair"
+type WeaponTypes =
+  | "firearm"
+  | "fighting"
+  | "throw"
+  | "artillery"
+  | "unnarmed"
+  | "demolitions"
+  | "electrical repair";
 
 export interface Weapon extends Characteristic {
   name: string;
@@ -60,25 +67,33 @@ export interface Possessions {
   };
 }
 
-export type CharacteristicStrings = "str" | "dex" | "con" | "siz" | "app"| "int" | "pow" | "edu"| "luck"
+export type CharacteristicStrings =
+  | "str"
+  | "dex"
+  | "con"
+  | "siz"
+  | "app"
+  | "int"
+  | "pow"
+  | "edu"
+  | "luck";
 
-export type CharacteristicList = Record<CharacteristicStrings,Characteristic>
+export type CharacteristicList = Record<CharacteristicStrings, Characteristic>;
 
-type SkillType = typeof list_of_skills
+type SkillType = typeof list_of_skills;
 
-export type SkillStrings = SkillType[number]
+export type SkillStrings = SkillType[number];
 
+export type Skills = Map<SkillStrings, Skill>;
 
-export type Skills = Map<SkillStrings,Skill>
-
-
-export interface InvestigatorFirestore extends Base,
+export interface InvestigatorFirestore
+  extends Base,
     BackStory,
-    BackStory,Possessions
-    {
+    BackStory,
+    Possessions {
   skills: Skills;
   weapons: Weapon[];
-  characteristics: CharacteristicList
+  characteristics: CharacteristicList;
   total_sanity_loss: number;
   maximum_sanity: number;
   current_sanity: number;
@@ -94,7 +109,7 @@ export class InvestigatorSchema implements InvestigatorFirestore {
   gender: string;
   residence: string;
   birthplace: string;
-  characteristics: CharacteristicList
+  characteristics: CharacteristicList;
   skills: Skills;
   weapons: Weapon[];
   gear_possessions: string;

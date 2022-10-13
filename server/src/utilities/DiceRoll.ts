@@ -1,35 +1,46 @@
-import { DiceRoller, DiceRoll, NumberGenerator } from "@dice-roller/rpg-dice-roller";
+import {
+  DiceRoller,
+  DiceRoll,
+  NumberGenerator,
+} from "@dice-roller/rpg-dice-roller";
 import { Collection } from "discord.js";
-import { loggingUtilWrapper } from "./Logging.js"
+import { loggingUtilWrapper } from "./Logging.js";
 import { redisClient } from "../data/redis/RedisBase.js";
 
-const textRegex = /[\s+]+[a-zA-Z]+'?[a-zA-Z]+/g
-const percentileRegex = /(d%|d100)/gi
+const textRegex = /[\s+]+[a-zA-Z]+'?[a-zA-Z]+/g;
+const percentileRegex = /(d%|d100)/gi;
 
 const engines = NumberGenerator.engines;
 const generator = NumberGenerator.generator;
-export const diceRoller = new DiceRoller()
+export const diceRoller = new DiceRoller();
 
 generator.engine = engines.nativeMath;
 
 type SuccessMessages = {
-  regular: "regular",
-  half: "hard",
-  fifth: "extreme",
+  regular: "regular";
+  half: "hard";
+  fifth: "extreme";
 };
 
 type FailureMessages = {
-  fumble: "fumble",
-  fail: "fail"
-}
+  fumble: "fumble";
+  fail: "fail";
+};
 
 export class RedisRollLogger {
-  logRoll(sessionId: string, message: string, data: DiceRoll | DiceRoll[] | number | number[]) {
-    redisClient.rPush(this.redisKey(sessionId), JSON.stringify({ message: message, roll: data }))
+  logRoll(
+    sessionId: string,
+    message: string,
+    data: DiceRoll | DiceRoll[] | number | number[]
+  ) {
+    redisClient.rPush(
+      this.redisKey(sessionId),
+      JSON.stringify({ message: message, roll: data })
+    );
   }
   async getRolls(sessionId: string) {
-    const rolls = await redisClient.lRange(this.redisKey(sessionId), 0, -1)
-    return rolls
+    const rolls = await redisClient.lRange(this.redisKey(sessionId), 0, -1);
+    return rolls;
   }
   redisKey(sessionId: string) {
     return `${sessionId}rolls`;
@@ -44,23 +55,22 @@ export class SkillChallenge {
       regular: "regular",
       half: "hard",
       fifth: "extreme",
-    }
+    };
     this.failureMessages = {
       fumble: "fumble",
-      fail: "fail"
-    }
+      fail: "fail",
+    };
   }
   isFailure(rolled: number, regular: number) {
     return rolled > regular;
   }
   isFumble(rolled: number, regular: number) {
     if (rolled >= 96 && rolled <= 100 && regular < 50) {
-      return true
+      return true;
     }
     if (rolled == 100 && regular >= 50) {
-      return true
-    }
-    else {
+      return true;
+    } else {
       return false;
     }
   }
@@ -68,15 +78,17 @@ export class SkillChallenge {
     return rolled <= fifth;
   }
   isHalf(rolled: number, half: number) {
-    return rolled <= half
+    return rolled <= half;
   }
   isRegular(rolled: number, regular: number) {
-    return rolled <= regular
+    return rolled <= regular;
   }
-  determineSuccess(rolled: number,
+  determineSuccess(
+    rolled: number,
     regular: number,
     half: number,
-    fifth: number): string | undefined {
+    fifth: number
+  ): string | undefined {
     switch (true) {
       case this.isFifth(rolled, fifth):
         return this.successMessages.fifth;
@@ -85,7 +97,7 @@ export class SkillChallenge {
       case this.isRegular(rolled, regular):
         return this.successMessages.regular;
       default:
-        return this.determineFailure(rolled, regular)
+        return this.determineFailure(rolled, regular);
     }
   }
   determineFailure(rolled: number, regular: number): string | undefined {
@@ -93,17 +105,16 @@ export class SkillChallenge {
       case this.isFumble(rolled, regular):
         return this.failureMessages.fumble;
       case this.isFailure(rolled, regular):
-        return this.failureMessages.fail
+        return this.failureMessages.fail;
       default:
-        return undefined
+        return undefined;
     }
   }
-
 }
 
 export class PercentileRoller extends RedisRollLogger {
-  constructor(){
-    super()
+  constructor() {
+    super();
   }
   rollTens() {
     return generator.integer(0, 9) * 10;
@@ -116,31 +127,30 @@ export class PercentileRoller extends RedisRollLogger {
     return roll.minTotal;
   }
   separateModifiers(notation: string) {
-    const modArray = notation.split("+")
+    const modArray = notation.split("+");
 
-    return modArray
+    return modArray;
   }
-  rollMultiplePercentile(sessionId: string,notation: string) {
+  rollMultiplePercentile(sessionId: string, notation: string) {
     const numDice = this.determineNumberofDice(notation);
 
-    const diceArray: number[] = []
+    const diceArray: number[] = [];
 
     for (let x = 0; x < numDice; x++) {
-      diceArray.push(this.rollPercentile(sessionId))
+      diceArray.push(this.rollPercentile(sessionId));
     }
 
     return diceArray;
-
   }
   rollPercentile(sessionId: string) {
     const tens = this.rollTens();
     const ones = this.rollOnes();
 
     if (tens == 0 && ones == 0) {
-      this.logRoll(this.redisKey(sessionId),"",100)
+      this.logRoll(this.redisKey(sessionId), "", 100);
       return 100;
     }
-    this.logRoll(this.redisKey(sessionId),"",tens+ones)
+    this.logRoll(this.redisKey(sessionId), "", tens + ones);
     return tens + ones;
   }
   rollMultipleTens(numDice: number) {
@@ -150,18 +160,24 @@ export class PercentileRoller extends RedisRollLogger {
     }
     return diceArray;
   }
-  penaltyDice(sessionId: string,numDice: number): { min: number, total: number, diceArray: number[] } {
+  penaltyDice(
+    sessionId: string,
+    numDice: number
+  ): { min: number; total: number; diceArray: number[] } {
     const diceArray = this.rollMultipleTens(numDice);
     const min = this.filterMin(diceArray);
     const ones = this.rollOnes();
-    this.logRoll(this.redisKey(sessionId),"",min)
+    this.logRoll(this.redisKey(sessionId), "", min);
     return { min: min, total: min + ones, diceArray: diceArray };
   }
-  bonusDice(sessionId: string,numDice: number): { max: number, total: number, diceArray: number[] } {
+  bonusDice(
+    sessionId: string,
+    numDice: number
+  ): { max: number; total: number; diceArray: number[] } {
     const diceArray = this.rollMultipleTens(numDice);
     const max = this.filterMax(diceArray);
     const ones = this.rollOnes();
-    this.logRoll(this.redisKey(sessionId),"",max)
+    this.logRoll(this.redisKey(sessionId), "", max);
     return { max: max, total: max + ones, diceArray: diceArray };
   }
   filterMin(diceArray: number[]) {
@@ -180,35 +196,39 @@ export class DiceHandler extends RedisRollLogger {
 
     if (found != null) {
       for (const item of found) {
-        notation = notation.replace(item, "")
+        notation = notation.replace(item, "");
       }
-      notation = notation.trim()
+      notation = notation.trim();
     }
 
-    return { dice: notation, comment: found }
+    return { dice: notation, comment: found };
   }
   combineComments(comments: RegExpMatchArray) {
     const initialString = "";
-    const commentString = comments.reduce((previousValue: string, currentValue: string) => previousValue + currentValue, initialString);
-    return commentString
+    const commentString = comments.reduce(
+      (previousValue: string, currentValue: string) =>
+        previousValue + currentValue,
+      initialString
+    );
+    return commentString;
   }
-  roll(sessionId: string,notation: string) {
+  roll(sessionId: string, notation: string) {
     const { dice, comment } = this.separateDiceAndComment(notation);
     const diceRoll = diceRoller.roll(dice);
     let combinedComment = "";
     if (comment != null) {
-      combinedComment = this.combineComments(comment)
+      combinedComment = this.combineComments(comment);
     }
-    this.logRoll(this.redisKey(sessionId),combinedComment,diceRoll)
-    return { diceRoll: diceRoll, comment: combinedComment }
+    this.logRoll(this.redisKey(sessionId), combinedComment, diceRoll);
+    return { diceRoll: diceRoll, comment: combinedComment };
   }
-  privateRoll(notation: string){
+  privateRoll(notation: string) {
     const diceRoll = diceRoller.roll(notation) as DiceRoll;
     return diceRoll.total;
   }
 }
 
-export function containsPercentile(notation: string){
+export function containsPercentile(notation: string) {
   return notation.match(percentileRegex);
 }
 
@@ -219,5 +239,3 @@ export const roller = loggingUtilWrapper(new DiceHandler());
 export const percentileRoller = loggingUtilWrapper(new PercentileRoller());
 
 export const skillChallenge = loggingUtilWrapper(new SkillChallenge());
-
-

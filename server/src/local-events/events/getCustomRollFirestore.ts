@@ -1,6 +1,6 @@
-import SessionCustomRoll from "../../data/firestore/SessionCustomRoll";
+import SessionCustomRoll from "../../data/firestore/SessionCustomRoll.js";
 
-module.exports = {
+export default {
   name: "getCustomRollFirestore",
   once: false,
   async execute(callback: (customRoll: SessionCustomRoll) => void) {

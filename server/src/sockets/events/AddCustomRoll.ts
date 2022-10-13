@@ -1,12 +1,14 @@
-import { Socket } from "dgram";
-import sonic, { SonicEmitter } from "../../local-events/index.js";
+import { Socket } from "socket.io";
+import sonic, { SonicEmitter } from "../../local-events/sonic.js";
 
-module.exports = {
+export default {
   name: "AddCustomRoll",
   once: false,
-  async execute(socket: Socket, sonic: SonicEmitter, data: {sessionId: string, notation: string,investigatorId: string}) {
-
-    
-    
+  async execute(
+    socket: Socket,
+    sonic: SonicEmitter,
+    data: { sessionId: string; notation: string; investigatorId: string }
+  ) {
+    console.log("test");
   },
 };

@@ -1,23 +1,27 @@
-import { InitiativeInterface } from "@/data/schemas/Initiative";
-import { InitiativeError } from "@/errors/InitiativeError";
+import { InitiativeInterface, InitiativeMap } from "../data/schemas/Initiative";
+import { InitiativeError } from "../errors/InitiativeError";
 
 class Initiative {
-  initiativeMap: Map<number, InitiativeInterface>;
+  initiativeMap: InitiativeMap;
   initiativeArray: InitiativeInterface[];
   nextNumber: number | null;
   currentNumber: number | null;
   previousNumber: number | null;
   isSorted: boolean;
   size: number;
-  constructor(
-      {
-        data,
-        isSorted,
-        nextNumber,
-        previousNumber,
-        currentNumber
-      }: { data: InitiativeInterface[], isSorted: boolean, nextNumber?: number, previousNumber?: number, currentNumber?: number }
-  ) {
+  constructor({
+    data,
+    isSorted,
+    nextNumber,
+    previousNumber,
+    currentNumber,
+  }: {
+    data: InitiativeInterface[];
+    isSorted: boolean;
+    nextNumber?: number;
+    previousNumber?: number;
+    currentNumber?: number;
+  }) {
     this.initiativeMap = new Map();
     this.initiativeArray = [...data];
     this.isSorted = isSorted;
@@ -35,26 +39,52 @@ class Initiative {
     });
     return index;
   }
-  nullCheck(){
-    return this.currentNumber != null && this.previousNumber != null && this.nextNumber != null
+  nullCheck() {
+    return (
+      this.currentNumber != null &&
+      this.previousNumber != null &&
+      this.nextNumber != null
+    );
   }
-  compareMapSizeCheck(value: number){
+  compareMapSizeCheck(value: number) {
     return value == this.size - 1;
   }
-  negativeNumberCheck(value: number){
+  negativeNumberCheck(value: number) {
     return value - 1 < 0;
   }
-  public next() {
-    if(!this.nullCheck()) throw new InitiativeError(`A value is null: current: ${this.currentNumber}; previous: ${this.previousNumber}; next: ${this.nextNumber}`)
-    this.currentNumber = this.compareMapSizeCheck(this.currentNumber as number) ? 0 : (this.currentNumber as number) + 1
-    this.previousNumber = this.compareMapSizeCheck(this.previousNumber as number) ? 0 : (this.previousNumber as number) + 1
-    this.nextNumber = this.compareMapSizeCheck(this.nextNumber as number) ? 0 : (this.nextNumber as number) + 1;
+  next() {
+    if (!this.nullCheck())
+      throw new InitiativeError(
+        `A value is null: current: ${this.currentNumber}; previous: ${this.previousNumber}; next: ${this.nextNumber}`
+      );
+    this.currentNumber = this.compareMapSizeCheck(this.currentNumber as number)
+      ? 0
+      : (this.currentNumber as number) + 1;
+    this.previousNumber = this.compareMapSizeCheck(
+      this.previousNumber as number
+    )
+      ? 0
+      : (this.previousNumber as number) + 1;
+    this.nextNumber = this.compareMapSizeCheck(this.nextNumber as number)
+      ? 0
+      : (this.nextNumber as number) + 1;
   }
-  public previous() {
-    if(!this.nullCheck()) throw new InitiativeError(`A value is null: current: ${this.currentNumber}; previous: ${this.previousNumber}; next: ${this.nextNumber}`)
-    this.currentNumber = this.negativeNumberCheck(this.currentNumber as number) ? this.size - 1 : (this.currentNumber as number) - 1
-    this.previousNumber = this.negativeNumberCheck(this.previousNumber as number) ? this.size - 1 : (this.previousNumber as number) - 1
-    this.nextNumber = this.negativeNumberCheck(this.nextNumber as number) ? this.size - 1 : (this.nextNumber as number) - 1;
+  previous() {
+    if (!this.nullCheck())
+      throw new InitiativeError(
+        `A value is null: current: ${this.currentNumber}; previous: ${this.previousNumber}; next: ${this.nextNumber}`
+      );
+    this.currentNumber = this.negativeNumberCheck(this.currentNumber as number)
+      ? this.size - 1
+      : (this.currentNumber as number) - 1;
+    this.previousNumber = this.negativeNumberCheck(
+      this.previousNumber as number
+    )
+      ? this.size - 1
+      : (this.previousNumber as number) - 1;
+    this.nextNumber = this.negativeNumberCheck(this.nextNumber as number)
+      ? this.size - 1
+      : (this.nextNumber as number) - 1;
   }
   private setCollectionAndRoundOrder() {
     this.initiativeArray.forEach(
@@ -92,4 +122,4 @@ class Initiative {
   }
 }
 
-export default Initiative
+export default Initiative;

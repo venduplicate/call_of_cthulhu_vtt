@@ -12,4 +12,10 @@ module.exports = {
   parserOptions: {
     ecmaVersion: "latest",
   },
+  rules: {
+    "prettier/prettier": [
+      "warn",
+      { endOfLine: "auto", quoteprops: "preserve" },
+    ],
+  },
 };

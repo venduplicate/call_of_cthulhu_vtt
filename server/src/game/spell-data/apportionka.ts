@@ -1,4 +1,4 @@
-import { SpellFirestoreInterface } from "@/data/schemas/Spell";
+import { SpellFirestoreInterface } from "../../data/schemas/Spell";
 import SpellBase from "./SpellBase"
 
 export class ApportionKa extends SpellBase {

@@ -1,9 +1,9 @@
 import {ApplicationCommandType, ContextMenuCommandBuilder,ContextMenuCommandInteraction, UserContextMenuCommandInteraction} from "discord.js";
 import winston from "winston"
-import type {SonicEmitter} from "../../local-events/index.js"
+import type {SonicEmitter} from "../../local-events/sonic.js"
 import {rollDice} from "../functions/RollDice.js"
 
-module.exports = {
+export default {
   data: new ContextMenuCommandBuilder()
     .setName("d4").setType(ApplicationCommandType.User),
   description: "Roll a d4",

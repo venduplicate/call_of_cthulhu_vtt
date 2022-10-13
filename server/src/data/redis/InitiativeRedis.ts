@@ -1,13 +1,13 @@
-import { SonicEmitter } from "@/local-events";
-import { RedisBase } from "./RedisBase";
+import { SonicEmitter } from "../../local-events/sonic.js";
+import { RedisBase } from "./RedisBase.js";
 
 export class InitiativeRedis extends RedisBase {
-    initiative: string
-    constructor(sonic: SonicEmitter){
-        super(sonic)
-        this.initiative = "initiative"
-    }
-    getInitiative(){
-        
-    }
+  initiative: string;
+  constructor(sonic: SonicEmitter) {
+    super(sonic);
+    this.initiative = "initiative";
+  }
+  getInitiative() {
+    console.log("test")
+  }
 }

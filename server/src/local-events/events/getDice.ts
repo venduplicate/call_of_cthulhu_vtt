@@ -1,7 +1,7 @@
 import type { DiceRoller } from "@dice-roller/rpg-dice-roller";
-import {diceRoller} from "../../utilities/DiceRoll";
+import {diceRoller} from "../../utilities/DiceRoll.js";
 
-module.exports = {
+export default {
   name: "getDice",
   once: false,
   async execute(callback: (roll: DiceRoller) => void) {

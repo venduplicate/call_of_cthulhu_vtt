@@ -1,51 +1,58 @@
-import { SessionBase } from "./SessionBase.js"
+import { SessionBase } from "./SessionBase.js";
 import { CustomRoll, RollConverter } from "../schemas/Roll.js";
-import { logger } from "@/utilities/Logging.js";
+import { logger } from "../../utilities/Logging.js";
 
 export default class SessionCustomRoll extends SessionBase {
-    custom_rolls: string;
-    converter: typeof RollConverter;
-    constructor() {
-        super()
-        this.custom_rolls = "custom_rolls"
-        this.converter = RollConverter;
+  custom_rolls: string;
+  converter: typeof RollConverter;
+  constructor() {
+    super();
+    this.custom_rolls = "custom_rolls";
+    this.converter = RollConverter;
+  }
+  getRollRef(sessionId: string) {
+    return this.getSessionRef(sessionId).collection(this.custom_rolls);
+  }
+  getInvestigatorRollRef(sessionId: string, investigatorId: string) {
+    return this.getRollRef(sessionId).doc(investigatorId);
+  }
+  async getAllRolls(sessionId: string, investigatorId: string) {
+    try {
+      const rollRef = this.getInvestigatorRollRef(
+        sessionId,
+        investigatorId
+      ).collection(this.custom_rolls);
+      const rollData = await this.getCollectionData(rollRef);
+      return { ...rollData };
+    } catch (error) {
+      logger.alert(error);
+      return undefined;
     }
-    getRollRef(sessionId: string) {
-        return this.getSessionRef(sessionId).collection(this.custom_rolls)
+  }
+  async updateRoll(
+    sessionId: string,
+    investigatorId: string,
+    rollData: CustomRoll
+  ) {
+    try {
+      const rollRef = this.getInvestigatorRollRef(sessionId, investigatorId)
+        .collection(this.custom_rolls)
+        .doc(rollData.id);
+      this.setDocData(this.converter, rollRef, rollData);
+      return { error: null, success: true };
+    } catch (error) {
+      return { error: error, success: false };
     }
-    getInvestigatorRollRef(sessionId: string, investigatorId: string) {
-        return this.getRollRef(sessionId).doc(investigatorId)
+  }
+  async deleteRoll(sessionId: string, investigatorId: string, rollId: string) {
+    try {
+      const rollRef = this.getInvestigatorRollRef(sessionId, investigatorId)
+        .collection(this.custom_rolls)
+        .doc(rollId);
+      this.deleteDocData(rollRef);
+      return { error: null, success: true };
+    } catch (error) {
+      return { error: error, success: false };
     }
-    async getAllRolls(sessionId: string, investigatorId: string) {
-        try {
-            const rollRef = this.getInvestigatorRollRef(sessionId, investigatorId).collection(this.custom_rolls)
-            const rollData = await this.getCollectionData(rollRef);
-            return { ...rollData };
-        }
-        catch (error) {
-            logger.alert(error)
-            return undefined
-        }
-    }
-    async updateRoll(sessionId: string, investigatorId: string, rollData: CustomRoll) {
-        try {
-            const rollRef = this.getInvestigatorRollRef(sessionId, investigatorId).collection(this.custom_rolls).doc(rollData.id)
-            this.setDocData(this.converter,rollRef,rollData)
-            return { error: null, success: true }
-        }
-        catch (error) {
-            return { error: error, success: false }
-        }
-    }
-    async deleteRoll(sessionId: string, investigatorId: string, rollId: string) {
-        try {
-            const rollRef = this.getInvestigatorRollRef(sessionId, investigatorId).collection(this.custom_rolls).doc(rollId)
-            this.deleteDocData(rollRef);
-            return { error: null, success: true }
-        }
-        catch (error) {
-            return { error: error, success: false }
-        }
-    }
-
+  }
 }

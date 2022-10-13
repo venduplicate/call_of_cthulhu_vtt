@@ -1,6 +1,6 @@
-import {percentileRoller, PercentileRoller} from "../../utilities/DiceRoll";
+import {percentileRoller, PercentileRoller} from "../../utilities/DiceRoll.js";
 
-module.exports = {
+export default {
   name: "getPercentileRoller",
   once: false,
   async execute(callback: (roll: PercentileRoller) => void) {

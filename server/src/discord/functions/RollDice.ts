@@ -1,7 +1,7 @@
 import { DiceRoll } from "@dice-roller/rpg-dice-roller";
 import { ContextMenuCommandInteraction, Message } from "discord.js";
 import winston from "winston";
-import { SonicEmitter } from "../../local-events/index.js";
+import { SonicEmitter } from "../../local-events/sonic.js";
 import { DiceHandler } from "../../utilities/DiceRoll";
 
 function isMessage(interaction: ContextMenuCommandInteraction | Message): interaction is Message {

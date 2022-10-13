@@ -1,7 +1,7 @@
 import { io } from "../../index.js";
 
 
-module.exports = {
+export default {
   name: "getIO",
   once: false,
   async execute(callback: (client: typeof io) => void) {

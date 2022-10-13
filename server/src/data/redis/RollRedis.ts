@@ -1,10 +1,9 @@
-import { SonicEmitter } from "@/local-events";
-import { DiceRoll } from "@dice-roller/rpg-dice-roller";
-import SessionCustomRoll from "../firestore/SessionCustomRoll";
+import { SonicEmitter } from "../../local-events/sonic.js";
+import SessionCustomRoll from "../firestore/SessionCustomRoll.js";
 import { SuccessorFailureObject } from "../types";
-import { RedisBase, redisClient } from "./RedisBase";
-import { CustomRoll } from "../schemas/Roll";
-import { logger } from "@/utilities/Logging";
+import { RedisBase, redisClient } from "./RedisBase.js";
+import { CustomRoll } from "../schemas/Roll.js";
+import { logger } from "../../utilities/Logging.js";
 
 export class RollRedis extends RedisBase {
   roll: string;

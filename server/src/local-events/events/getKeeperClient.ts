@@ -1,6 +1,6 @@
-import { KeeperClient, keeper } from "../../discord";
+import { KeeperClient, keeper } from "../../discord/keeper.js"
 
-module.exports = {
+export default {
   name: "getKeeperClient",
   once: false,
   async execute(callback: (client: KeeperClient) => void) {

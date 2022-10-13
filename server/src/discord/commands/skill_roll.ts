@@ -1,10 +1,10 @@
-const { SlashCommandBuilder } = require("discord.js");
+import { SlashCommandBuilder } from "discord.js";
 import {ChatInputCommandInteraction, Collection} from "discord.js";
 import winston from "winston"
-import type {SonicEmitter} from "../../local-events/index"
-import {CommandCollection} from "../index";
+import type {SonicEmitter} from "../../local-events/sonic.js"
+import {CommandCollection} from "../keeper.js";
 
-module.exports = {
+export default {
   data: new SlashCommandBuilder()
     .setName("skill_roll")
     .setDescription("Description Here"),

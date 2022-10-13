@@ -1,10 +1,10 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
-import type { SonicEmitter } from "../../local-events/index.js";
+import type { SonicEmitter } from "../../local-events/sonic.js";
 import winston from "winston";
 import * as dotenv from 'dotenv'
 dotenv.config({path:"c:/Users/AndrewKent/Documents/Development/call_of_cthulhu_vtt/server/src/.env"})
 
-module.exports = {
+export default {
   data: new SlashCommandBuilder()
     .setName("link")
     .setDescription("Get the link for the web component."),
