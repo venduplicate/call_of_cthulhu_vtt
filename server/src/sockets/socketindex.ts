@@ -21,11 +21,10 @@ async function initRegisterSockets() {
 
     for (const file of eventFiles) {
       const filePath = path.join(socketsPath, file);
-      const socketEvent: FileBase = await import(
-        pathToFileURL(filePath).toString()
-      );
+      const data = await import(pathToFileURL(filePath).toString());
+      const event = data.default;
 
-      socketFiles.set(socketEvent.name, socketEvent);
+      socketFiles.set(event.name, event.default);
     }
   } catch (error) {
     console.log(error, "registersockets");

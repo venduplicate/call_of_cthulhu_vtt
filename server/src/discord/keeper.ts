@@ -9,10 +9,11 @@ import {
   Message,
 } from "discord.js";
 import { loggingUtilWrapper, logger } from "../utilities/Logging.js";
-import sonic from "../local-events/sonic.js";
+import sonic, { SonicEmitter } from "../local-events/sonic.js";
 import path from "node:path";
 import fs from "node:fs";
 import { register_commands } from "./RegisterCommands.js";
+import winston from "winston";
 import * as dotenv from "dotenv";
 import { fileURLToPath, pathToFileURL } from "node:url";
 dotenv.config({
@@ -26,7 +27,9 @@ export interface CommandModule {
   description: string;
   execute: (
     interaction: ChatInputCommandInteraction | Message,
-    commands?: any
+    sonic: SonicEmitter,
+    logger: winston.Logger,
+    commands: CommandCollection
   ) => void;
 }
 
@@ -52,8 +55,8 @@ export class KeeperClient {
   init() {
     try {
       this.client.login(token);
-      this.initCommands()
-      this.initEvents()
+      this.initCommands();
+      this.initEvents();
     } catch (error) {
       console.log(error, "discord init real");
     }
@@ -69,15 +72,16 @@ export class KeeperClient {
   async initCommands(): Promise<void> {
     console.log(process.cwd());
     try {
-      const __dirname = path.dirname(fileURLToPath(import.meta.url))
+      const __dirname = path.dirname(fileURLToPath(import.meta.url));
       const commandsPath = path.join(__dirname, "commands");
       const commandFiles = fs
         .readdirSync(commandsPath)
         .filter((file: string) => file.endsWith(".js"));
       for (const file of commandFiles) {
-        const filePath = path.join(commandsPath, file)
-        const command = await import(pathToFileURL(filePath).toString())
-        this.commands.set(command.default.data.name, command);
+        const filePath = path.join(commandsPath, file);
+        const data = await import(pathToFileURL(filePath).toString());
+        const command = data.default;
+        this.commands.set(command.data.name, command);
       }
       register_commands();
     } catch (error) {
@@ -85,24 +89,25 @@ export class KeeperClient {
     }
   }
   async initEvents(): Promise<void> {
-    const __dirname = path.dirname(fileURLToPath(import.meta.url))
+    const __dirname = path.dirname(fileURLToPath(import.meta.url));
     const eventsPath = path.join(__dirname, "events");
     const eventFiles = fs
       .readdirSync(eventsPath)
       .filter((file: string) => file.endsWith(".js"));
 
     for (const file of eventFiles) {
-      const filePath = path.join(eventsPath, file)
-      const event = await import(pathToFileURL(filePath).toString())
+      const filePath = path.join(eventsPath, file);
+      const data = await import(pathToFileURL(filePath).toString());
+      const event = data.default;
       if (event.once) {
         this.client.once(event.name, async (...args: any) => {
           logger.debug("Discord event executing once", event.name);
-          event.execute(...args, logger, sonic);
+          event.execute(...args, logger, sonic, this.commands);
         });
       } else {
         this.client.on(event.name, async (...args: any) => {
           logger.debug("Discord event executing", event.name);
-          event.execute(...args, logger, sonic);
+          event.execute(...args, logger, sonic, this.commands);
         });
       }
     }

@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import type { KeeperClient } from "../keeper.js";
+import type { CommandCollection, KeeperClient } from "../keeper.js";
 import type { SonicEmitter } from "../../local-events/sonic.js";
 import winston from "winston";
 
@@ -11,8 +11,9 @@ export default {
   once: false,
   async execute(
     interaction: Message,
+    sonic: SonicEmitter,
     logger: winston.Logger,
-    sonic: SonicEmitter
+    commands: CommandCollection
   ) {
     if (interaction.author.bot) return;
     if (
@@ -27,12 +28,12 @@ export default {
       try {
         if (interaction.content.match(mathRegex)) {
           if (mathcom) {
-            mathcom.execute(interaction, sonic);
+            mathcom.execute(interaction, sonic,logger,commands);
           }
         }
         if (interaction.content.match(diceRegex)) {
           if (rollcom) {
-            rollcom.execute(interaction, sonic);
+            rollcom.execute(interaction, sonic,logger,commands);
           }
         }
       } catch (error) {

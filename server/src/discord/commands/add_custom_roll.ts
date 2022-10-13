@@ -13,5 +13,6 @@ export default {
     logger: winston.Logger
   ) {
     console.log("test");
+    await interaction.reply("Hello")
   },
 };

@@ -35,7 +35,7 @@ export class SonicEmitter extends EventEmitter {
   }
   async init() {
     try {
-      const __dirname = path.dirname(fileURLToPath(import.meta.url))
+      const __dirname = path.dirname(fileURLToPath(import.meta.url));
       const eventsPath = path.join(__dirname, "events");
       const eventFiles = fs
         .readdirSync(eventsPath)
@@ -43,7 +43,9 @@ export class SonicEmitter extends EventEmitter {
 
       for (const file of eventFiles) {
         const filePath = path.join(eventsPath, file);
-        const event = await import(pathToFileURL(filePath).toString())
+        const data = await import(pathToFileURL(filePath).toString());
+        const event = data.default;
+        console.log(event)
         if (event.once) {
           this.once(event.name, (...args: unknown[]) => event.execute(...args));
         } else {
