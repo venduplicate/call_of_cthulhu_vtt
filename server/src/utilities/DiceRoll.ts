@@ -11,7 +11,6 @@ const percentileRegex = /(d%|d100)/gi;
 
 const engines = NumberGenerator.engines;
 const generator = NumberGenerator.generator;
-export const diceRoller = new DiceRoller();
 
 generator.engine = engines.nativeMath;
 
@@ -91,9 +90,10 @@ export class SkillChallengeHandler {
   }
 }
 
-export class PercentileRollerHandler extends RollRedis {
+export class PercentileRollerHandler {
+  dice: DiceRoller;
   constructor() {
-    super();
+    this.dice = new DiceRoller();
   }
   rollTens() {
     return generator.integer(0, 9) * 10;
@@ -102,7 +102,7 @@ export class PercentileRollerHandler extends RollRedis {
     return generator.integer(0, 9);
   }
   determineNumberofDice(notation: string) {
-    const roll = diceRoller.roll(notation) as DiceRoll;
+    const roll = this.dice.roll(notation) as DiceRoll;
     return roll.minTotal;
   }
   separateModifiers(notation: string) {
@@ -167,7 +167,11 @@ export class PercentileRollerHandler extends RollRedis {
   }
 }
 
-export class DiceHandler extends RollRedis {
+export class DiceHandler {
+  dice: DiceRoller;
+  constructor() {
+    this.dice = new DiceRoller();
+  }
   separateDiceAndComment(notation: string) {
     const found = notation.match(textRegex);
 
@@ -191,7 +195,7 @@ export class DiceHandler extends RollRedis {
   }
   rollDice(notation: string) {
     const { dice, comment } = this.separateDiceAndComment(notation);
-    const diceRoll = diceRoller.roll(dice);
+    const diceRoll = this.dice.roll(dice);
     let combinedComment = "";
     if (comment != null) {
       combinedComment = this.combineComments(comment);
@@ -199,7 +203,7 @@ export class DiceHandler extends RollRedis {
     return { diceRoll: diceRoll, comment: combinedComment };
   }
   privateRollSingle(notation: string) {
-    const diceRoll = diceRoller.roll(notation) as DiceRoll;
+    const diceRoll = this.dice.roll(notation) as DiceRoll;
     return diceRoll.total;
   }
 }
@@ -208,10 +212,12 @@ export function containsPercentile(notation: string) {
   return notation.match(percentileRegex);
 }
 
-export const roller = loggingUtilWrapper(new DiceHandler());
+export const diceRoller = loggingUtilWrapper(new DiceHandler());
 
 export const percentileRoller = loggingUtilWrapper(
   new PercentileRollerHandler()
 );
 
-export const skillChallenge = loggingUtilWrapper(new SkillChallengeHandler());
+export const skillChallengeHandler = loggingUtilWrapper(
+  new SkillChallengeHandler()
+);
