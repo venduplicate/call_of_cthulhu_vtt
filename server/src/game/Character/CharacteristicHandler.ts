@@ -17,16 +17,25 @@ export type CharacteristicStrings =
 
 export type CharacteristicList = Record<CharacteristicStrings, Characteristic>;
 
+export const dexSymbol = Symbol.for("dex");
+export const conSymbol = Symbol.for("con");
+export const strSymbol = Symbol.for("str");
+export const sizSymbol = Symbol.for("siz");
+export const appSymbol = Symbol.for("app");
+export const intSymbol = Symbol.for("int")
+export const powSymbol = Symbol.for("pow")
+export const eduSymbol = Symbol.for("edu")
+export const luckSymbol = Symbol.for("luck")
 
 export class CharacteristicBase {
   characteristic: Characteristic;
   constructor(characteristic: Characteristic) {
     this.characteristic = characteristic;
   }
-  getCharacteristic() {
+  getAttribute() {
     return this.characteristic;
   }
-  setCharacteristic(newReg: number) {
+  setAttribute(newReg: number) {
     const newCharacteristic = this.calculateHalfandFifthValues(newReg);
     this.characteristic = newCharacteristic;
     return this;
