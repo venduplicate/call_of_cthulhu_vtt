@@ -6,8 +6,7 @@ dotenv.config({
 import winston from "winston";
 import { Logtail } from "@logtail/node";
 import { LogtailTransport } from "@logtail/winston";
-
-console.log(process.env.LOGTAIL_TOKEN)
+import sonic from "../local-events/sonic";
 
 const logKey = process.env.LOGTAIL_TOKEN as string;
 
@@ -37,7 +36,11 @@ function functionHandler<T extends Object>(
       return error;
     } finally {
       const end = new Date().getTime();
-      logger.info('Function Time Trace',`${value}`,{start:start,end:end,total: end-start})
+      logger.info("Function Time Trace", `${value}`, {
+        start: start,
+        end: end,
+        total: end - start,
+      });
     }
   };
 }
@@ -48,10 +51,10 @@ export function loggingUtilWrapper<T extends Object>(obj: T) {
     get(target, prop, receiver) {
       const value = target[prop as keyof T];
 
-      logger.info(`retrieving ${target}`)
+      logger.info(`retrieving ${target}`);
 
       if (value instanceof Function) {
-        logger.info(`${value} is function`)
+        logger.info(`${value} is function`);
         return functionHandler(value, target, receiver);
       }
       return value;

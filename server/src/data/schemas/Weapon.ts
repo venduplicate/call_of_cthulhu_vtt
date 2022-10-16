@@ -36,13 +36,3 @@ export class WeaponSchema {
     this.common_era = data.common_era;
   }
 }
-
-export const SpellConverter = {
-  toFirestore: function (data: WeaponFirestoreInterface) {
-    return { ...data };
-  },
-  fromFirestore: function (snapshot: FirebaseFirestore.QueryDocumentSnapshot) {
-    const data = snapshot.data() as WeaponFirestoreInterface;
-    return new WeaponSchema(data);
-  },
-};

@@ -1,3 +1,1 @@
-export class InvestigatorError extends Error {
-    
-}
+export default class InvestigatorError extends Error {}

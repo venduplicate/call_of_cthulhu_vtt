@@ -4,7 +4,7 @@ import type {
   InitiativeArray,
   InitiativeMap,
 } from "../../data/schemas/Initiative";
-import type { InitiativeFirestore } from "../../data/firestore/InitiativeFirestore.js";
+import type { InitiativeFirestore } from "../../data/firestore/Combat/InitiativeFirestore.js";
 
 export default {
   name: "GetInitiative",

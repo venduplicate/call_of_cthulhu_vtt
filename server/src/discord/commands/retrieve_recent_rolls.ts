@@ -1,6 +1,6 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
-import type { SonicEmitter } from "../../local-events/sonic.js";
-import winston from "winston";
+import { RollRedis } from "../../data/redis/RollRedis.js";
+import sonic from "../../local-events/sonic.js";
 
 export default {
   data: new SlashCommandBuilder()
@@ -9,9 +9,12 @@ export default {
   description: `Get the link to your session's web page component.`,
   async execute(
     interaction: CommandInteraction,
-    sonic: SonicEmitter,
-    logger: winston.Logger
   ) {
-    console.log("test");
+    if (interaction.channel == null) return;
+    const sessionId = interaction.channel.id;
+
+    sonic.emit("getRollRedis", async (rollHandler: RollRedis) => {
+      const rollLogs = await rollHandler.getRollLogs(sessionId);
+    });
   },
 };

@@ -5,8 +5,6 @@ import {
   Collection,
   Partials,
   SlashCommandBuilder,
-  ChatInputCommandInteraction,
-  Message,
 } from "discord.js";
 import { loggingUtilWrapper, logger } from "../utilities/Logging.js";
 import sonic, { SonicEmitter } from "../local-events/sonic.js";
@@ -25,16 +23,10 @@ dotenv.config({
 });
 
 const token = process.env.DISCORD_TOKEN;
-
 export interface CommandModule {
   data: SlashCommandBuilder;
   description: string;
-  execute: (
-    interaction: ChatInputCommandInteraction | Message,
-    sonic: SonicEmitter,
-    logger: winston.Logger,
-    commands: CommandCollection
-  ) => void;
+  execute: (sonic: SonicEmitter, ...args: unknown[]) => void;
 }
 
 export type CommandCollection = Collection<string, CommandModule>;
@@ -99,12 +91,12 @@ export class KeeperClient {
       if (event.once) {
         this.client.once(event.name, async (...args: unknown[]) => {
           logger.debug("Discord event executing once", event.name);
-          event.execute(args, sonic, logger, this.commands);
+          event.execute(sonic, ...args);
         });
       } else {
         this.client.on(event.name, async (...args: unknown[]) => {
           logger.debug("Discord event executing", event.name);
-          event.execute(args, sonic, logger, this.commands);
+          event.execute(sonic, ...args);
         });
       }
     }

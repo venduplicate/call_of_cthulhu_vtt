@@ -45,14 +45,19 @@ export class SonicEmitter extends EventEmitter {
         const event = await getDefaultData(eventsPath, file);
         if (event == undefined) continue;
         if (event.once) {
-          console.log(event);
-          this.once(event.name, (...args: unknown[]) => event.execute(...args));
+          this.once(event.name, (...args: unknown[]) => {
+            this.emit("info", `executing event once ${event.name}`);
+            event.execute(...args, this);
+          });
         } else {
-          this.on(event.name, (...args: unknown[]) => event.execute(...args));
+          this.on(event.name, (...args: unknown[]) => {
+            this.emit("info", `Executing ${event.name}`);
+            event.execute(...args, this);
+          });
         }
       }
     } catch (error) {
-      console.log(error, "sonic init");
+      logger.alert(error);
     }
   }
   createUUID() {

@@ -1,25 +1,26 @@
-import type { InvestigatorFirestore } from "./Investigator.js";
+import type { InvestigatorInterface } from "./Characters/Investigator.js";
 
 export interface UserInterface {
   id: string;
-  investigators: InvestigatorFirestore[];
+  investigators: InvestigatorInterface[];
 }
 
 export class UserSchema {
   id: string;
-  investigators: InvestigatorFirestore[];
-  constructor(id: string, investigators: InvestigatorFirestore[]) {
+  investigators: InvestigatorInterface[];
+  constructor(id: string, investigators: InvestigatorInterface[]) {
     this.id = id;
     this.investigators = investigators;
   }
 }
 
-export const UserConverter = {
-  toFirestore: function (data: UserInterface) {
-    return { ...data };
-  },
-  fromFirestore: function (snapshot: FirebaseFirestore.QueryDocumentSnapshot) {
-    const data = snapshot.data() as UserInterface;
-    return new UserSchema(data.id, data.investigators);
-  },
-};
+export interface DiscordUserInterface {
+  userId: string;
+}
+
+export class DiscordUserSchema {
+  userId: string;
+  constructor(userId: string) {
+    this.userId = userId;
+  }
+}

@@ -17,14 +17,3 @@ export class SessionSchema {
     this.isSorted = data.isSorted;
   }
 }
-
-export const SessionConverter = {
-  toFirestore: function (data: SessionInterface) {
-    return { ...data };
-  },
-  fromFirestore: function (snapshot: FirebaseFirestore.QueryDocumentSnapshot) {
-    const data = snapshot.data();
-    if (data == undefined) return;
-    return new SessionSchema(data as SessionInterface);
-  },
-};

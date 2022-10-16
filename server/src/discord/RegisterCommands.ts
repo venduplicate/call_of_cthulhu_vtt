@@ -1,9 +1,5 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-import fs from "node:fs";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord.js";
-import path from "node:path";
 import {
   createDirName,
   createPath,

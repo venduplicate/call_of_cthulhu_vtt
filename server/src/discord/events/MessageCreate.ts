@@ -3,8 +3,9 @@ import type { CommandCollection, KeeperClient } from "../keeper.js";
 import type { SonicEmitter } from "../../local-events/sonic.js";
 import winston from "winston";
 
-const diceRegex = /^(\/|\/[a-z]|\/[A-Z]|r)*\s*(\d)*\s*([d|D])([\d])+/;
-const mathRegex = /^([-+]?[0-9]*\.?[0-9]+[\\/\\+\-\\*])+([-+]?[0-9]*\.?[0-9]+)/;
+export const diceRegex = /^(\/|\/[a-z]|\/[A-Z]|r)*\s*(\d)*\s*([d|D])([\d])+/;
+export const mathRegex =
+  /^([-+]?[0-9]*\.?[0-9]+[\\/\\+\-\\*])+([-+]?[0-9]*\.?[0-9]+)/;
 
 export default {
   name: "messageCreate",
@@ -28,12 +29,12 @@ export default {
       try {
         if (interaction.content.match(mathRegex)) {
           if (mathcom) {
-            mathcom.execute(interaction, sonic,logger,commands);
+            mathcom.execute(interaction, sonic, logger, commands);
           }
         }
         if (interaction.content.match(diceRegex)) {
           if (rollcom) {
-            rollcom.execute(interaction, sonic,logger,commands);
+            rollcom.execute(interaction, sonic, logger, commands);
           }
         }
       } catch (error) {

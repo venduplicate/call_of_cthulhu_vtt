@@ -5,10 +5,5 @@ import type { CommandCollection } from "./keeper";
 export interface EventFileBase {
   name: string;
   once: boolean;
-  execute: (
-    args: unknown[],
-    sonic: SonicEmitter,
-    logger: winston.Logger,
-    commands: CommandCollection
-  ) => Promise<void>;
+  execute: (sonic: SonicEmitter, ...args: unknown[]) => Promise<void>;
 }

@@ -1,4 +1,4 @@
-import { initiativeHandler } from "./firestore/InitiativeFirestore"
+import { initiativeHandler } from "./firestore/Combat/InitiativeFirestore"
 
 const dataBaseObject = {
     ...initiativeHandler,

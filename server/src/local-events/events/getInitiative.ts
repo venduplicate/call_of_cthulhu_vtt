@@ -1,7 +1,7 @@
 import {
   type InitiativeFirestore,
   initiativeHandler,
-} from "../../data/firestore/InitiativeFirestore.js";
+} from "../../data/firestore/Combat/InitiativeFirestore.js";
 
 export default {
   name: "getInitiative",

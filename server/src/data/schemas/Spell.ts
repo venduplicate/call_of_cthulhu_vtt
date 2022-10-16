@@ -1,5 +1,5 @@
 import { SchemaBase } from "./SchemaBase";
-export interface SpellFirestoreInterface extends SchemaBase {
+export interface SpellInterface extends SchemaBase {
   name: string;
   casting_time: string | number;
   magic_point_cost: string;
@@ -14,7 +14,7 @@ export class SpellSchema {
   magic_point_cost: string | number;
   pow_cost: number;
   sanity_cost: string | number;
-  constructor(data: SpellFirestoreInterface) {
+  constructor(data: SpellInterface) {
     this.id = data.id;
     this.name = data.name;
     this.magic_point_cost = data.magic_point_cost;
@@ -23,13 +23,3 @@ export class SpellSchema {
     this.casting_time = data.casting_time;
   }
 }
-
-export const SpellConverter = {
-  toFirestore: function (data: SpellFirestoreInterface) {
-    return { ...data };
-  },
-  fromFirestore: function (snapshot: FirebaseFirestore.QueryDocumentSnapshot) {
-    const data = snapshot.data() as SpellFirestoreInterface;
-    return new SpellSchema(data);
-  },
-};

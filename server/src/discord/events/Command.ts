@@ -1,33 +1,27 @@
 import { ChatInputCommandInteraction, SelectMenuInteraction } from "discord.js";
 import type { CommandCollection } from "../keeper.js";
 import type { SonicEmitter } from "../../local-events/sonic.js";
-import winston from "winston";
-import { logger } from "../../utilities/Logging.js";
 
 export default {
   name: "interactionCreate",
   once: false,
-  async execute(
-    interaction: ChatInputCommandInteraction,
-    sonic: SonicEmitter,
-    logger: winston.Logger,
-    commands: CommandCollection
-  ) {
+  async execute(sonic: SonicEmitter, interaction: ChatInputCommandInteraction) {
     if (!interaction.isChatInputCommand()) return;
-    const command = commands.get(interaction.commandName);
-    if (!command) {
-      return;
-    }
-    try {
-      await command.execute(interaction,sonic,logger,commands);
-    } catch (error) {
-      console.log(error);
-      if (error instanceof Error) {
-        logger.alert(error)
+    sonic.emit("getCommands", async (commands: CommandCollection) => {
+      const command = commands.get(interaction.commandName);
+      if (!command) {
+        return;
       }
-      await interaction.reply({
-        content: "There was an error while executing this command!",
-      });
-    }
+      try {
+        command.execute(sonic, interaction);
+      } catch (error) {
+        if (error instanceof Error) {
+          sonic.emit("alert", error);
+        }
+        await interaction.reply({
+          content: "There was an error while executing this command!",
+        });
+      }
+    });
   },
 };

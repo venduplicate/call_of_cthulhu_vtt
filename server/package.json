@@ -1,6 +1,6 @@
 {
   "type": "module",
-   "scripts": {
+  "scripts": {
     "dev:debug": "ts-node-dev --transpile-only --respawn --inspect=4321 --project tsconfig.json src/index.ts",
     "dev": "ts-node-dev --transpile-only --respawn --project tsconfig.json src/index.ts"
   },
@@ -16,6 +16,7 @@
     "express": "^4.18.1",
     "firebase": "^9.11.0",
     "firebase-admin": "^11.0.1",
+    "mathjs": "^11.3.0",
     "redis": "^4.3.1",
     "socket.io": "^4.5.2",
     "uuid": "^9.0.0",

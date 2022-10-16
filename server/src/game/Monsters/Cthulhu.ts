@@ -1,6 +1,5 @@
-import { InvestigatorFirestore } from "../../data/schemas/Investigator.js";
-import { MonsterBase } from "./MonsterBase.js";
-import { MonsterFirestoreInterface } from "../../data/schemas/Monster.js";
+import { InvestigatorFirestore } from "../../data/schemas/Characters/Investigator.js";
+import { MonsterBase } from "./MonsterUtilities.js";
 import { roller } from "../../utilities/DiceRoll.js";
 
 export default class Cthulhu extends MonsterBase {

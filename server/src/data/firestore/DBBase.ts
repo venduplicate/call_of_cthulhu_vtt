@@ -1,3 +1,7 @@
+import {
+  CollectionReference,
+  DocumentReference,
+} from "firebase-admin/firestore";
 import { SchemaBase } from "../schemas/SchemaBase.js";
 import { db } from "./FireBaseAccess.js";
 
@@ -5,6 +9,12 @@ export default class DBBase {
   db: FirebaseFirestore.Firestore;
   constructor() {
     this.db = db;
+  }
+  getDocRef(ref: CollectionReference, docId: string) {
+    return ref.doc(docId);
+  }
+  getCollectionRef(ref: DocumentReference, collectionName: string) {
+    return ref.collection(collectionName);
   }
   async getDocData<Type>(
     converter: FirebaseFirestore.FirestoreDataConverter<Type>,

@@ -6,6 +6,11 @@ export interface CustomRoll extends SchemaBase {
   investigatorId: string;
 }
 
+export interface RollLog extends SchemaBase {
+  roll: string;
+  comment?: string;
+}
+
 export class RollSchema implements CustomRoll {
   id: string;
   notation: string;
@@ -23,14 +28,3 @@ export class RollSchema implements CustomRoll {
     this.investigatorId = investigatorId;
   }
 }
-
-export const RollConverter = {
-  toFirestore: function (data: CustomRoll) {
-    return { ...data };
-  },
-  fromFirestore: function (snapshot: FirebaseFirestore.QueryDocumentSnapshot) {
-    const { id, name, notation, investigatorId } =
-      snapshot.data() as CustomRoll;
-    return new RollSchema(id, name, notation, investigatorId);
-  },
-};

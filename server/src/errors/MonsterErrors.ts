@@ -1,3 +1,1 @@
-export class MonsterError extends Error {
-    
-}
+export default class MonsterError extends Error {}

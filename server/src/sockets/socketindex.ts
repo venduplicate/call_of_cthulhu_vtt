@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { type Socket, Server } from "socket.io";
 import { Collection } from "discord.js";
-import path from "node:path";
-import fs from "node:fs";
 import { logger } from "../utilities/Logging.js";
 import http from "http";
 import sonic from "../local-events/sonic.js";
 import { FileBase, IOServer } from "./types.js";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   createDirName,
   createPath,

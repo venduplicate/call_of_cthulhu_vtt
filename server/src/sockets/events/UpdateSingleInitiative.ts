@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 import { SonicEmitter } from "../../local-events/sonic.js";
-import { InvestigatorFirestore } from "../../data/schemas/Investigator.js";
+import { InvestigatorFirestore } from "../../data/schemas/Characters/Investigator.js";
 
 export default {
   name: "UpdateSingleInitiative",

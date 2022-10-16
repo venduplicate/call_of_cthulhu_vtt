@@ -1,6 +1,7 @@
-import { initiativeHandler } from "../../data/firestore/InitiativeFirestore";
+import { initiativeHandler } from "../../data/firestore/Combat/InitiativeFirestore";
 import { ActionRowBuilder, SelectMenuBuilder } from "discord.js";
 import type { PlayerObject } from "../../data/schemas/Initiative";
+import { CustomRoll } from "../../data/schemas/Roll";
 
 export async function playerSelectmenu(sessionId: string,playerKey: string) {
   const playerArray = await initiativeHandler.getPlayerNames(sessionId);
