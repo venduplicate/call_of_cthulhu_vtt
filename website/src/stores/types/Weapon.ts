@@ -1,19 +1,36 @@
-import type { Characteristic } from "./InvestigatorTypes";
+import type { Skill } from "./Skills";
 import type { SchemaBase } from "./SchemaBase";
 
-export interface WeaponFirestoreInterface extends SchemaBase {
-  name: string;
-  skill: string;
-  damage: string;
-  range_type: string;
-  base_range: number;
-  uses_per_round: number;
-  cost_1920: number;
-  cost_modern: number;
-  common_era: string[];
-}
+export const weaponTypeStrings = {
+  damageBonus: "DB",
+  halfDamageBonus: "Half DB",
+  burn: "burn",
+  stun: "stun",
+  yard: "yards",
+};
 
-type WeaponTypes =
+export type StatusTypes =
+  | typeof weaponTypeStrings.burn
+  | typeof weaponTypeStrings.stun;
+export type DamageBonusTypes =
+  | typeof weaponTypeStrings.damageBonus
+  | typeof weaponTypeStrings.halfDamageBonus;
+
+export type yardsType = typeof weaponTypeStrings.yard;
+
+export type WeaponDamageTypes = yardsType | StatusTypes | DamageBonusTypes;
+
+export const halfDBSymbol = Symbol.for(weaponTypeStrings.halfDamageBonus);
+export const dbSymbol = Symbol.for(weaponTypeStrings.damageBonus);
+
+export const burnSymbol = Symbol.for(weaponTypeStrings.burn);
+export const stunSymbol = Symbol.for(weaponTypeStrings.stun);
+
+export const yardsSymbol = Symbol.for(typeof weaponTypeStrings.yard);
+
+export type WeaponMap = Map<string, WeaponInterface>;
+
+export type WeaponTypes =
   | "none"
   | "firearm"
   | "fighting"
@@ -23,42 +40,18 @@ type WeaponTypes =
   | "demolitions"
   | "electrical repair";
 
-export interface WeaponFirestoreInterface extends Characteristic {
-  type: WeaponTypes;
+export interface WeaponInterface extends SchemaBase {
   name: string;
-  skill: string;
-  damage: string;
-  range_type: string;
-  base_range: number;
-  uses_per_round: number;
-  cost_1920: number;
-  cost_modern: number;
-  common_era: string[];
-}
-
-export class WeaponSchema {
-  id: string;
-  name: string;
-  skill: string;
-  damage: string;
-  range_type: string;
-  base_range: number;
-  uses_per_round: number;
-  cost_1920: number;
-  cost_modern: number;
-  common_era: string[];
+  subType: string;
   type: WeaponTypes;
-  constructor(data: WeaponFirestoreInterface) {
-    this.id = data.id;
-    this.name = data.name;
-    this.skill = data.skill;
-    this.damage = data.damage;
-    this.range_type = data.range_type;
-    this.base_range = data.base_range;
-    this.uses_per_round = data.uses_per_round;
-    this.cost_1920 = data.cost_1920;
-    this.cost_modern = data.cost_modern;
-    this.common_era = data.common_era;
-    this.type = data.type;
-  }
+  skill: Skill;
+  damageNotation: string;
+  range: number;
+  rangeMeasurement: string;
+  attacks: number;
+  ammoMax: number;
+  ammoCurrent: number;
+  malfunction: number;
+  damageBonus: number;
+  isMalfunctioning: boolean;
 }

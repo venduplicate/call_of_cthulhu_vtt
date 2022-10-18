@@ -1,19 +1,10 @@
-import { SchemaBase } from "../../data/schemas/SchemaBase";
+import type { BaseCharacterInterface } from "../types/InvestigatorTypes";
 
-export interface BaseCharacterInterface extends SchemaBase {
-  name: string;
-  player: string;
-  occupation: string;
-  age: number;
-  controlledById: string;
-  gender: string;
-  pronouns: string;
-  birthplace: string;
-}
+
 export class BaseCharacterHandler {
   private id: string;
   private name: string;
-  private player: string;
+  private playerName: string;
   private occupation: string;
   private age: number;
   private controlledById: string;
@@ -23,8 +14,8 @@ export class BaseCharacterHandler {
   constructor(data: BaseCharacterInterface) {
     this.id = data.id;
     this.name = data.name;
-    this.player = data.player;
-    this.controlledById = data.controlledById;
+    this.playerName = data.playerName;
+    this.controlledById = data.controlledById
     this.occupation = data.occupation;
     this.age = data.age;
     this.gender = data.gender;
@@ -45,7 +36,8 @@ export class BaseCharacterHandler {
     return {
       id: this.id,
       name: this.name,
-      player: this.player,
+      playerId: this.controlledById,
+      playerName: this.playerName,
       controlledById: this.controlledById,
       occupation: this.occupation,
       age: this.age,

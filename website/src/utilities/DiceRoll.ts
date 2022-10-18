@@ -3,8 +3,6 @@ import {
   DiceRoll,
   NumberGenerator,
 } from "@dice-roller/rpg-dice-roller";
-import { loggingUtilWrapper } from "./Logging.js";
-import { RollRedis } from "../data/redis/RollRedis.js";
 
 const textRegex = /[\s+]+[a-zA-Z]+'?[a-zA-Z]+/g;
 const percentileRegex = /(d%|d100)/gi;
@@ -212,14 +210,8 @@ export function containsPercentile(notation: string) {
   return notation.match(percentileRegex);
 }
 
-export const diceRoller = loggingUtilWrapper(new DiceHandler());
+export const diceRoller = new DiceHandler();
 
-export const percentileRoller = loggingUtilWrapper(
-  new PercentileRollerHandler()
-);
+export const percentileRoller = new PercentileRollerHandler();
 
-export const skillChallengeHandler = loggingUtilWrapper(
-  new SkillChallengeHandler()
-);
-
-
+export const skillChallengeHandler = new SkillChallengeHandler();

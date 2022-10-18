@@ -1,18 +1,14 @@
-import { list_of_skills } from "../static/skills";
-import { Characteristic, CharacteristicBase } from "./CharacteristicHandler";
+import type { Characteristic } from "../types/Characteristics";
+import { CharacteristicBase } from "./CharacteristicHandler";
 
 export interface Skill extends Characteristic {
   name: string;
   hasImproved: boolean;
 }
 
-type SkillType = typeof list_of_skills;
-
-export type SkillStrings = SkillType[number];
-
 export type Skills = Map<string, Skill>;
 
-export class Skill extends CharacteristicBase {
+export class SkillHandler extends CharacteristicBase {
   name: string;
   hasImproved: boolean;
   constructor(skill: Skill) {

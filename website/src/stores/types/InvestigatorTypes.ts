@@ -1,30 +1,23 @@
-import type { list_of_skills } from "../static";
 import type { SchemaBase } from "./SchemaBase";
-import type { WeaponFirestoreInterface } from "./Weapon";
+import type { WeaponMap } from "./Weapon";
+import type { CharacteristicList } from "./Characteristics";
+import type { SkillFirestore, Skills } from "./Skills";
+import type { SanityInterface } from "../types/Characteristics";
+import type { PlayerBaseInterface } from "./PlayerBase";
 
-export interface Base extends SchemaBase {
+export interface BaseCharacterInterface
+  extends SchemaBase,
+    PlayerBaseInterface {
   name: string;
-  player: string;
   occupation: string;
   age: number;
-  pronouns: string;
+  controlledById: string;
   gender: string;
-  residence: string;
+  pronouns: string;
   birthplace: string;
 }
 
 export type InsanityTypes = "temporary" | "indefinite" | "permanent";
-
-export interface Characteristic {
-  reg: number;
-  half: number;
-  fifth: number;
-}
-
-export interface Skill extends Characteristic {
-  name: string;
-  hasImproved: boolean;
-}
 
 export interface BackStory {
   personal_desc: string;
@@ -49,34 +42,20 @@ export interface Possessions {
   };
 }
 
-export type CharacteristicStrings =
-  | "str"
-  | "dex"
-  | "con"
-  | "siz"
-  | "app"
-  | "int"
-  | "pow"
-  | "edu"
-  | "luck";
+export interface HealthInteface {
+  hpCurrent: number;
+  hpMax: number;
+}
 
-export type CharacteristicList = Record<CharacteristicStrings, Characteristic>;
 
-type SkillType = typeof list_of_skills;
-
-export type SkillStrings = SkillType[number];
-
-export type Skills = Map<SkillStrings, Skill>;
-
-export interface InvestigatorFirestore
-  extends Base,
-    BackStory,
-    BackStory,
-    Possessions {
+// there is a difference between firestore data and our class data
+// so the data most likely will need to be formatted before hand. 
+export interface InvestigatorInterface extends BaseCharacterInterface {
   skills: Skills;
-  weapons: WeaponFirestoreInterface[];
+  weapons: WeaponMap;
   characteristics: CharacteristicList;
-  total_sanity_loss: number;
-  maximum_sanity: number;
-  current_sanity: number;
+  sanity: SanityInterface;
+  backstory: BackStory;
+  posessions: Possessions;
+  health: HealthInteface;
 }

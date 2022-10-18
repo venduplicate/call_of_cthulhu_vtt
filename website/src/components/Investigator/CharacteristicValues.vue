@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import RegHalfFifthBoxes from "./RegHalfFifthBoxes.vue";
-import type { Characteristic } from "../../stores/types/InvestigatorTypes";
+import type { Characteristic } from "../../stores/types/Characteristics";
 import { ref, type PropType } from "vue";
 
 const props = defineProps({

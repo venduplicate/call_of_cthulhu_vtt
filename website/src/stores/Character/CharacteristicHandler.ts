@@ -22,25 +22,43 @@ export const conSymbol = Symbol.for("con");
 export const strSymbol = Symbol.for("str");
 export const sizSymbol = Symbol.for("siz");
 export const appSymbol = Symbol.for("app");
-export const intSymbol = Symbol.for("int")
-export const powSymbol = Symbol.for("pow")
-export const eduSymbol = Symbol.for("edu")
-export const luckSymbol = Symbol.for("luck")
+export const intSymbol = Symbol.for("int");
+export const powSymbol = Symbol.for("pow");
+export const eduSymbol = Symbol.for("edu");
+export const luckSymbol = Symbol.for("luck");
 
 export class CharacteristicBase {
-  characteristic: Characteristic;
+  reg: number;
+  half: number;
+  fifth: number;
   constructor(characteristic: Characteristic) {
-    this.characteristic = characteristic;
+    this.reg = characteristic.reg;
+    this.half = characteristic.half;
+    this.fifth = characteristic.fifth;
   }
-  getAttribute() {
-    return this.characteristic;
+  public get attribute() {
+    return { reg: this.reg, half: this.half, fifth: this.fifth };
   }
-  setAttribute(newReg: number) {
+  private set attribute(newCharacteristic: Characteristic) {
+    this.setReg(newCharacteristic.reg);
+    this.setHalf(newCharacteristic.half);
+    this.setFifth(newCharacteristic.fifth);
+  }
+  private setReg(value: number) {
+    this.reg = value;
+  }
+  private setHalf(value: number) {
+    this.half = value;
+  }
+  private setFifth(value: number) {
+    this.fifth = value;
+  }
+  updateCharacteristic(newReg: number) {
     const newCharacteristic = this.calculateHalfandFifthValues(newReg);
-    this.characteristic = newCharacteristic;
+    this.attribute = newCharacteristic;
     return this;
   }
-  calculateHalfandFifthValues(regValue: number): Characteristic {
+  private calculateHalfandFifthValues(regValue: number): Characteristic {
     const halfValue = Math.floor(regValue / 2);
     const fifthValue = Math.floor(regValue / 5);
     return { reg: regValue, half: halfValue, fifth: fifthValue };
