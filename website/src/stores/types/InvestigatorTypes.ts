@@ -1,7 +1,7 @@
 import type { SchemaBase } from "./SchemaBase";
 import type { WeaponMap } from "./Weapon";
 import type { CharacteristicList } from "./Characteristics";
-import type { SkillFirestore, Skills } from "./Skills";
+import type { ServerSkills } from "./Skills";
 import type { SanityInterface } from "../types/Characteristics";
 import type { PlayerBaseInterface } from "./PlayerBase";
 
@@ -51,7 +51,7 @@ export interface HealthInteface {
 // there is a difference between firestore data and our class data
 // so the data most likely will need to be formatted before hand. 
 export interface InvestigatorInterface extends BaseCharacterInterface {
-  skills: Skills;
+  skills: ServerSkills;
   weapons: WeaponMap;
   characteristics: CharacteristicList;
   sanity: SanityInterface;

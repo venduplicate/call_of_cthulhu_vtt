@@ -39,6 +39,9 @@ export class CharacteristicBase {
   public get attribute() {
     return { reg: this.reg, half: this.half, fifth: this.fifth };
   }
+  update(){
+    this.attribute = this.calculateHalfandFifthValues(this.reg)
+  }
   private set attribute(newCharacteristic: Characteristic) {
     this.setReg(newCharacteristic.reg);
     this.setHalf(newCharacteristic.half);

@@ -1,18 +1,22 @@
 <script setup lang="ts">
-import type { Characteristic } from "../../stores/types/InvestigatorTypes";
+import type {CharacteristicBase } from "../../stores/Character/CharacteristicHandler";
 import { ref, type PropType } from "vue";
 
 const props = defineProps({
-  valueData: { type: Object as PropType<Characteristic>, required: true },
+  valueData: { type: Object as PropType<CharacteristicBase>, required: true },
 });
 
-const regular = ref(props.valueData.reg);
-const half = ref(Math.floor(regular.value / 2));
-const fifth = ref(Math.floor(regular.value / 5));
+const characteristicRef = ref(props.valueData);
+characteristicRef.value.update()
+const regular = ref(characteristicRef.value.reg);
+const half = ref(characteristicRef.value.half);
+const fifth = ref(characteristicRef.value.fifth);
 
 function updateValues() {
-  half.value = Math.floor(regular.value / 2);
-  fifth.value = Math.floor(regular.value / 5);
+  characteristicRef.value.updateCharacteristic(regular.value);
+  characteristicRef.value.update();
+  half.value = characteristicRef.value.half;
+  fifth.value = characteristicRef.value.fifth;
 }
 </script>
 

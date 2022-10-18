@@ -3,7 +3,7 @@ import type {
   BaseCharacterInterface,
   InvestigatorInterface,
 } from "../types/InvestigatorTypes";
-import type { Skills } from "../types/Skills";
+import type { ServerSkills, Skill, Skills } from "../types/Skills";
 import { BaseCharacterHandler } from "./BaseHandler";
 import { CharacteristicHandler } from "./CharacteristicHandler";
 import interCharacterHandler, {
@@ -39,7 +39,7 @@ export class Investigator {
     this.baseData = new BaseCharacterHandler(data);
     this.characteristics = new CharacteristicHandler(data.characteristics);
     this.sanity = new SanityHandler(data.sanity);
-    this.skills = data.skills;
+    this.skills = new Map();
     this.statusEffects = new StatusEffectTracker();
     this.backstory = data.backstory;
     this.posessions = data.posessions;
@@ -62,5 +62,8 @@ export class Investigator {
       isCurrentTurn: false,
     };
     return initiativeObject;
+  }
+  set skillsMap(skills: Skills) {
+    this.skills = new Map(skills);
   }
 }

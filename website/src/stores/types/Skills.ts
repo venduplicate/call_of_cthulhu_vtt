@@ -8,4 +8,5 @@ export interface Skill extends Characteristic {
 
 export type Skills = Map<string, SkillHandler>;
 
-export type SkillFirestore = Map<string, Skill>;
+export type ServerSkills = Map<string,Skill>;
+

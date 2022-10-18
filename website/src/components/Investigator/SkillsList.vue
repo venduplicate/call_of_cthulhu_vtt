@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import CharacteristicValues from "./CharacteristicValues.vue";
-import type { Skills } from "../../stores/types/InvestigatorTypes";
-import { ref, type PropType } from "vue";
+import {defaultSkills} from "../../stores/static";
+import type { Skills } from "../../stores/types/Skills";
+import { ref, type PropType, computed } from "vue";
 
 const props = defineProps({
   skillProp: { type: Object as PropType<Skills>, required: true },
 });
+
+function setBaseSkills(){
+  
+}
 
 const skills = ref(props.skillProp);
 const addSkill = () => {

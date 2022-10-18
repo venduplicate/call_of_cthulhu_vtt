@@ -1,12 +1,6 @@
 <script setup lang="ts">
-//   import CharacterValues from "../../lib/CharacterValues.svelte";
-//   import CharacteristicBox from "../../lib/CharacteristicBox.svelte";
-//   import SkillsList from "../../lib/SkillsList.svelte";
-//   import TabsContainer from "../../lib/TabsContainer.svelte";
-//   import TabPanel from "../../lib/TabPanel.svelte";
-//   import LargeTextAreaField from "../../lib/LargeTextAreaField.svelte";
-//   import Investigators from "../../lib/Investigators.svelte";
-//   import Backstory from "../../lib/Backstory.svelte";
+import CharacteristicValues from "../components/Investigator/CharacteristicValues.vue"
+import SkillsList from "../components/Investigator/SkillsList.vue";
 import { useInvestigatorStore } from "../stores/InvestigatorStore";
 
 const investigator = useInvestigatorStore();
@@ -65,7 +59,7 @@ const investigator = useInvestigatorStore();
     </div>
     <div style="">
       <TabsContainer>
-        <TabPanel title="Skills" id="{1}">Test</TabPanel>
+        <TabPanel title="Skills" id="{1}"><SkillsList></SkillsList></TabPanel>
         <TabPanel title="My Story" id="{2}"
           ><LargeTextAreaField title="My Story"
         /></TabPanel>
