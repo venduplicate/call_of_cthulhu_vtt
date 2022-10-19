@@ -10,6 +10,9 @@ export default class DBBase {
   constructor() {
     this.db = db;
   }
+  getTopRef(identifier: string){
+    return this.db.collection(identifier);
+  }
   getDocRef(ref: CollectionReference, docId: string) {
     return ref.doc(docId);
   }

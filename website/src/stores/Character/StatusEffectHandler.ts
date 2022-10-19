@@ -2,6 +2,7 @@ import EventEmitter from "node:events";
 import { InterCharacterEmitter } from "./InterCharacterEmitter";
 import { IntraCharacterEmitter } from "./IntraCharacterEmitter";
 import type { SanityInterface } from "../types/Characteristics";
+import { durationOfEffectStrings, type ExpirationofEffect, type StatusEffectArray, type StatusEffectInterface } from "../types/StatusEffects";
 // stun
 // burn
 // temporary insanity
@@ -26,51 +27,119 @@ const oneFifth = 1 / 5;
 export class StatusEffect {
   name: string;
   description: string;
+  expiration: ExpirationofEffect;
+  type: string;
   remove: () => void;
-  constructor(name: string, description: string, remove: () => void) {
-    this.name = name;
-    this.description = description;
+  constructor(data = { name: "", description: "", expiration: { durationAmount: 0, durationType: "", remainingDuration: 0 }, type: "" } as StatusEffectInterface, remove = () => { return }) {
+    this.name = data.name;
+    this.description = data.description;
+    this.expiration = data.expiration;
+    this.type = data.type;
     this.remove = remove;
   }
-  applyStatusEffect(tracker: StatusEffectTracker) {
-    tracker.apply(this);
+  get remainingExpiration(){
+    return this.expiration.remainingDuration
+  }
+
+}
+
+// arithmetic
+// get attributes
+// 
+// WIP
+export class CustomEffect {
+  variableNumber: number;
+  variableString: string;
+  constructor(){
+    // super(data, remove)
+    this.variableNumber = 0;
+    this.variableString = ""
+  }
+  private get number(){
+    return this.variableNumber;
+  }
+  private set number(value: number){
+    this.variableNumber = value;
+  }
+  private get string(){
+    return this.variableString;
+  }
+  private set string(value: string){
+    this.variableString = value;
+  }
+  subject(subjectId: string){
+    // get subject instance
+    return this
+  }
+  subtract(subtractor: number){
+    const newNumber = this.number - subtractor;
+    this.number = newNumber;
+    return this;
+  }
+  add(value: number){
+    const newNumber = this.number + value;
+    this.number = newNumber;
+    return this;
+  }
+  setNumberValue(value: number){
+    this.number = value;
+    return this;
+  }
+  setStringValue(value: string) {
+    this.string = value;
+    return this;
+  }
+  execute(fn: () => unknown){
+    fn();
     return this;
   }
 }
 
+
+// add.dex.player
+// subtract.sanity.bob
+// you.lose.sanity.each.round
+
+
+
 export class StunEffect extends StatusEffect {
-  constructor(roundsToExpire: "1d6" | string, remove: () => void) {
+  constructor(data: StatusEffectInterface, remove: () => void) {
     super(
-      "stun",
-      `Your character can not act for ${roundsToExpire} rounds`,
+      data,
       remove
     );
   }
 }
 
 export class BurnEffect extends StatusEffect {
-  totalRounds: number;
-  constructor(remove: () => void) {
+  totalDamage: number;
+  constructor(data: StatusEffectInterface, remove: () => void) {
     super(
-      "burn",
-      "Your character is on fire until the fire is put out.",
+      data,
       remove
     );
-    this.totalRounds = 0;
+    this.totalDamage = this.minimumDamage;
   }
-  getTotalRounds() {
-    return this.totalRounds;
+  get minimumDamage(){
+    return 1;
   }
-  setTotalRounds(value: number) {
-    this.totalRounds = value;
+  get damageTotal(){
+    return this.totalDamage;
   }
-  incrementRounds() {
-    const newRounds = this.getTotalRounds() + 1;
-    this.setTotalRounds(newRounds);
+  set updateDamageTotal(value: number){
+    this.totalDamage = value;
+  }
+  incrementDamage(){
+    const newDamage = this.totalDamage * 2;
+    this.updateDamageTotal = newDamage;
     return this;
   }
-  extinguish() {
-    return this.remove;
+  damage() {
+    this.incrementDamage();
+    // emitter.to(investigatorId).emit("damage",{type: "burn", source: this.playerName, value: this.damageTotal})
+  }
+  get extinguish() {
+    return this.remove();
   }
 }
 
@@ -80,18 +149,40 @@ export class StatusEffectTracker extends EventEmitter {
     super();
     this.effectMap = new Map();
   }
+  effectsFromArray(data: StatusEffectArray) {
+    data.forEach((record) => {
+      if (this.isStun(record.type)) {
+        this.createRemoveListener(record.name);
+        this.addStatusEffect(new StunEffect(record, this.createRemoveEmitter(record.name)))
+      }
+      if (this.isBurn(record.type)) {
+        this.createRemoveListener(record.name)
+        this.addStatusEffect(new BurnEffect(record,this.createRemoveEmitter(record.name)))
+      }
+      else {
+        this.createRemoveListener(record.name)
+        this.addStatusEffect(new StatusEffect(record,this.createRemoveEmitter(record.name)))
+      }
+    })
+  }
   get effects() {
-    return this.effectMap;
+    return new Map(this.effectMap);
   }
   set effects(mapOfEffects: Map<string, StatusEffect>) {
     this.effectMap = mapOfEffects;
+  }
+  isStun(value: string) {
+    return value.toLowerCase() == "stun"
+  }
+  isBurn(value: string) {
+    return value.toLowerCase() == "burn"
   }
   apply<T extends StatusEffect>(effect: T) {
     this.addStatusEffect(effect);
     return this;
   }
   createRemoveEmitter(nameOfStatusEffect: string) {
-    return this.emit(nameOfStatusEffect);
+    return () => { this.emit(nameOfStatusEffect) }
   }
   createRemoveListener(nameOfStatusEffect: string) {
     this.once(nameOfStatusEffect, () => {
@@ -127,12 +218,12 @@ export class SanityHandler {
   private sessionSanityLoss: number;
   private static temporarySanityAmount = 5;
   private static oneFifth = 1 / 5;
-  constructor(data: SanityInterface) {
+  constructor(data = { maxSanity: 0, currentSanity: 0, hasIndefiniteInsanity: false, hasTemporaryInsanity: false, hasPermanentInsanity: false, sessionSanityLoss: 0 }) {
     this.maxSanity = data.maxSanity;
     this.currentSanity = data.currentSanity;
-    this.hasIndefiniteInsanity = data.hasIndefiniteInsanity || false;
-    this.hasTemporaryInsanity = data.hasTemporaryInsanity || false;
-    this.hasPermanentInsanity = data.hasPermanentInsanity || false;
+    this.hasIndefiniteInsanity = data.hasIndefiniteInsanity;
+    this.hasTemporaryInsanity = data.hasTemporaryInsanity
+    this.hasPermanentInsanity = data.hasPermanentInsanity
     this.sessionSanityLoss = data.sessionSanityLoss;
   }
   public get sanityAtCurrent() {

@@ -19,7 +19,7 @@ const attributes = [
 
 <template>
   <div class="box-one">
-    <CharacterValues
+    <CharacteristicValues
       v-for="attribute in attributes"
       :key="attribute"
       :charData="{ name: attribute, reg: 100 }"

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { Weapon } from "../../stores/types/InvestigatorTypes";
+import type { WeaponInterface } from "../../stores/types/Weapon";
 import { ref, type PropType } from "vue";
 
 const props = defineProps({
-  weaponsProp: { type: Array as PropType<Weapon[]>, required: true },
+  weaponsProp: { type: Array as PropType<WeaponInterface[]>, required: true },
 });
 
 const weapons = ref(props.weaponsProp);

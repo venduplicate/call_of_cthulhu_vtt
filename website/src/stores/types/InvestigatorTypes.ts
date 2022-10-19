@@ -4,6 +4,7 @@ import type { CharacteristicList } from "./Characteristics";
 import type { ServerSkills } from "./Skills";
 import type { SanityInterface } from "../types/Characteristics";
 import type { PlayerBaseInterface } from "./PlayerBase";
+import type { StatusEffectArray } from "./StatusEffects";
 
 export interface BaseCharacterInterface
   extends SchemaBase,
@@ -58,4 +59,5 @@ export interface InvestigatorInterface extends BaseCharacterInterface {
   backstory: BackStory;
   posessions: Possessions;
   health: HealthInteface;
+  statusEffects: StatusEffectArray
 }

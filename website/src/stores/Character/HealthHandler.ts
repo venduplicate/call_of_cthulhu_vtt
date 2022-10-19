@@ -1,7 +1,7 @@
 export class HealthHandler {
   hpCurrent: number;
   hpMax: number;
-  constructor(hpCurrent: number, hpMax: number) {
+  constructor(hpCurrent = 0, hpMax = 0) {
     this.hpCurrent = hpCurrent;
     this.hpMax = hpMax;
   }

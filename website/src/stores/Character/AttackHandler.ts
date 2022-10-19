@@ -18,7 +18,9 @@ import {
 } from "../types/Weapon";
 import type { Skill } from "../types/Skills";
 // import { StatusEffect } from "../types/StatusEffects";
-import type { WeaponTypes } from "../types/Weapon";
+import type { WeaponTypes, WeaponMap } from "../types/Weapon";
+import { v4 } from "uuid";
+import intraEmitter, { IntraCharacterEmitter } from "./IntraCharacterEmitter";
 
 // todo:
 // need to check for stun in damage array
@@ -31,10 +33,12 @@ export class AttackHandler {
   dice: DiceHandler;
   skillCheck: SkillChallengeHandler;
   percentileRoller: PercentileRollerHandler;
+  intraPlayer: IntraCharacterEmitter
   constructor() {
     this.dice = diceRoller;
     this.skillCheck = skillChallengeHandler;
     this.percentileRoller = percentileRoller;
+    this.intraPlayer = intraEmitter;
   }
   getPenaltySkillRolls(totalPenalty: number) {
     return this.percentileRoller.penaltyDice(totalPenalty);
@@ -87,19 +91,101 @@ export class AttackHandler {
   compareSkillCheck(regValue: number, rolledValue: number) {
     return rolledValue >= regValue;
   }
+  getDamageAmount(notation: string) {
+    return this.dice.rollSingleNotation(notation);
+  }
+  damage(targetId: string) {
+    this.intraPlayer.emit("damage", { targetId: targetId, damageTotal: 0 });
+  }
 }
+
+// firearm
+//artillery
+//demolitions
+//electrical
+//throw
+
+export class WeaponHandler {
+  weaponsMap: WeaponMap
+  intraPlayer: IntraCharacterEmitter;
+  constructor() {
+    this.weaponsMap = new Map();
+    this.intraPlayer = intraEmitter;
+  }
+  get weapons() {
+    return new Map(this.weaponsMap);
+  }
+  set weapons(data: WeaponMap) {
+    this.weaponsMap = new Map(data);
+  }
+  set addWeapon(data: WeaponInterface) {
+    switch (data.type) {
+      case "unnarmed":
+        this.addUnnarmedWeapon = data;
+        break;
+      case "fighting":
+        this.addFightingWeapon = data;
+        break;
+      case "artillery":
+        this.addArtilleryWeapon = data;
+        break;
+      case "demolitions":
+        this.addDemolitionsWeapon = data;
+        break;
+      case "electrical repair":
+        this.addElectricalWeapon = data;
+        break;
+      case "firearm":
+        this.addFirearmWeapon = data;
+        break;
+      case "throw":
+        this.addThrownWeapon = data;
+        break;
+      default:
+        break;
+    }
+  }
+  set addFightingWeapon(data: WeaponInterface) {
+    this.weapons.set(data.id, new FightingWeapon(data));
+  }
+  set addUnnarmedWeapon(data: WeaponInterface) {
+    this.weapons.set(data.id, new UnnarmedWeapon(data));
+  }
+  set addFirearmWeapon(data: WeaponInterface) {
+    this.weapons.set(data.id, new FirearmWeapon(data));
+  }
+  set addArtilleryWeapon(data: WeaponInterface) {
+    this.weapons.set(data.id, new ArtilleryWeapon(data));
+  }
+  set addDemolitionsWeapon(data: WeaponInterface) {
+    this.weapons.set(data.id, new DemolitionsWeapon(data));
+  }
+  set addElectricalWeapon(data: WeaponInterface) {
+    this.weapons.set(data.id, new ElectricalWeapon(data));
+  }
+  set addThrownWeapon(data: WeaponInterface) {
+
+    this.weapons.set(data.id, new ThrowWeapon(data));
+  }
+  set removeWeapon(id: string) {
+    const weaponsMap = this.weapons;
+    weaponsMap.delete(id);
+    this.weapons = weaponsMap;
+  }
+}
+
 export class Weapon {
   id: string;
-  name: string;
-  skill: Skill;
-  damageNotation: string;
-  range: number;
-  rangeMeasurement: string;
-  attacks: number;
-  ammoMax: number;
+  name: string; //
+  skill: Skill; // 
+  damageNotation: string; // 
+  range: number; //
+  rangeMeasurement: string; //
+  attacks: number; // uses per round
+  ammoMax: number; // bullets in gun etc.
   ammoCurrent: number;
-  malfunction: number;
-  subType: string;
+  malfunction: number; // malfunction
+  subType: string; // 
   isMalfunctioning: boolean;
   attackHandler: AttackHandler;
   constructor(data: WeaponInterface) {
@@ -120,6 +206,17 @@ export class Weapon {
   getDamageNotation() {
     return this.damageNotation;
   }
+  attack(targetId: string) {
+    const { roll, message } = this.attackHandler.attackNormally(this.skill);
+    if (message == "") return;
+
+  }
+  penaltyAttack(targetId: string, numPenalty: number) {
+
+  }
+  bonusAttack(targetId: string, numBonus: number) {
+
+  }
 }
 
 // attack normally
@@ -132,15 +229,6 @@ export class Weapon {
 // click: Attack with penalty
 // enter # of penalty dice
 //
-
-export class StatusEffectApplication {
-  stun() {
-    console.log("test");
-  }
-  burn() {
-    console.log("test");
-  }
-}
 export class FightingWeapon extends Weapon {
   type: Extract<WeaponTypes, "fighting" | "unnarmed">;
   damageBonus: number;
@@ -243,7 +331,7 @@ export class ArtilleryWeapon extends ReloadWeapon {
 
 export class UnnarmedWeapon extends FightingWeapon {
   type: Extract<WeaponTypes, "unnarmed">;
-  constructor(data: WeaponInterface) {
+  constructor(data = { name: "Unnarmed", ammoCurrent: 0, ammoMax: 0, attacks: 1, damageBonus: 0, id: v4(), isMalfunctioning: false, range: 0, rangeMeasurement: "none", skill: { reg: 0, half: 0, fifth: 0, hasImproved: false, name: "Fighting" } as Skill, subType: "", type: "fighting", damageNotation: "", malfunction: 0 } as WeaponInterface) {
     super(data);
     this.type = "unnarmed";
   }

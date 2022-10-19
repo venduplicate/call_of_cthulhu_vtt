@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import CharacteristicValues from "./CharacteristicValues.vue";
+import {useInvestigatorStore} from "../../stores/InvestigatorStore";
 import {defaultSkills} from "../../stores/static";
 import type { Skills } from "../../stores/types/Skills";
 import { ref, type PropType, computed } from "vue";
@@ -7,6 +8,12 @@ import { ref, type PropType, computed } from "vue";
 const props = defineProps({
   skillProp: { type: Object as PropType<Skills>, required: true },
 });
+
+const store = useInvestigatorStore();
+
+const skillsStore = computed(() => {
+    
+  })
 
 function setBaseSkills(){
   

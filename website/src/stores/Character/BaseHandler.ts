@@ -11,7 +11,7 @@ export class BaseCharacterHandler {
   private gender: string;
   private pronouns: string;
   private birthplace: string;
-  constructor(data: BaseCharacterInterface) {
+  constructor(data = {id: "", name: "", playerName: "", controlledById: "", occupation: "", age: 0, gender: "", pronouns: "", birthplace: ""} as BaseCharacterInterface) {
     this.id = data.id;
     this.name = data.name;
     this.playerName = data.playerName;
@@ -22,17 +22,55 @@ export class BaseCharacterHandler {
     this.pronouns = data.pronouns;
     this.birthplace = data.birthplace;
   }
-  getName() {
+  get characterName() {
     return this.name;
   }
-  setName(value: string) {
+  set characterName(value: string) {
     this.name = value;
-    return this;
   }
-  getId() {
+  get characterId() {
     return this.id;
   }
-  getBasePlayerObject(): BaseCharacterInterface {
+  set characterId(value: string){
+    this.id = value;
+  }
+  get playerNameString(){
+    return this.playerName
+  }
+  set playerNameString(value: string){
+    this.playerName = value;
+  }
+  set playerId(value: string){
+    this.controlledById = value;
+  }
+  set occupationString(value: string){
+    this.occupation = value;
+  }
+  set genderString(value: string){
+    this.gender = value;
+  }
+  set pronounString(value: string){
+    this.pronouns = value;
+  }
+  set ageNumber(value: number){
+    this.age = value;
+  }
+  set birthPlaceString(value: string){
+    this.birthPlaceString = value;
+  }
+  set basePlayerObject(data: BaseCharacterInterface){
+    const {id, name, playerName, controlledById, occupation, age, gender, pronouns, birthplace} = data;
+    this.characterId = id;
+    this.playerNameString = playerName;
+    this.characterName = name;
+    this.playerId = controlledById;
+    this.occupationString = occupation;
+    this.ageNumber = age;
+    this.genderString = gender;
+    this.pronounString = pronouns;
+    this.birthPlaceString = birthplace;
+  }
+  get basePlayerObject(): BaseCharacterInterface {
     return {
       id: this.id,
       name: this.name,

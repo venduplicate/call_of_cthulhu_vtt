@@ -12,13 +12,13 @@ const generator = NumberGenerator.generator;
 
 generator.engine = engines.nativeMath;
 
-type SuccessMessages = {
+export type SuccessMessages = {
   regular: "regular";
   half: "hard";
   fifth: "extreme";
 };
 
-type FailureMessages = {
+export type FailureMessages = {
   fumble: "fumble";
   fail: "fail";
 };
@@ -31,11 +31,11 @@ export class SkillChallengeHandler {
       regular: "regular",
       half: "hard",
       fifth: "extreme",
-    };
+    } as SuccessMessages;
     this.failureMessages = {
       fumble: "fumble",
       fail: "fail",
-    };
+    } as FailureMessages;
   }
   isFailure(rolled: number, regular: number) {
     return rolled > regular;
@@ -83,7 +83,7 @@ export class SkillChallengeHandler {
       case this.isFailure(rolled, regular):
         return this.failureMessages.fail;
       default:
-        return undefined;
+        return "";
     }
   }
 }
@@ -191,14 +191,27 @@ export class DiceHandler {
     );
     return commentString;
   }
-  rollDice(notation: string) {
+  rollMultipleNotations(...notations: string[]) {
+    const diceArray = []
+    for (const record of notations){
+      const { dice, comment } = this.separateDiceAndComment(record);
+      const diceRoll = this.dice.roll(dice) as DiceRoll;
+      let combinedComment = "";
+      if (comment != null) {
+        combinedComment = this.combineComments(comment);
+      }
+      diceArray.push({ diceRoll: diceRoll, comment: combinedComment })
+    }
+   return diceArray;
+  }
+  rollSingleNotation(notation: string){
     const { dice, comment } = this.separateDiceAndComment(notation);
     const diceRoll = this.dice.roll(dice);
     let combinedComment = "";
     if (comment != null) {
       combinedComment = this.combineComments(comment);
     }
-    return { diceRoll: diceRoll, comment: combinedComment };
+    return { diceRoll: diceRoll as DiceRoll, comment: combinedComment };
   }
   privateRollSingle(notation: string) {
     const diceRoll = this.dice.roll(notation) as DiceRoll;

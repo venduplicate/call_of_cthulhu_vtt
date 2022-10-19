@@ -14,6 +14,7 @@ import {
   negativeNumberCheck,
 } from "../../utilities/NumberUtils";
 import { v4 } from "uuid";
+import type { Weapon } from "./AttackHandler";
 
 const combatStats = ["Firearms", "Fighting", "Dodge"];
 
@@ -39,10 +40,10 @@ export class CharacterInitiativeHandler {
     });
     return combatSkills;
   }
-  getFirearmObject(WeaponInterfaces: WeaponMap): FirearmCombatStats {
+  getFirearmObject(weapons: WeaponMap): FirearmCombatStats {
     let hasFirearm = false;
-    WeaponInterfaces.forEach((item: WeaponInterface) => {
-      if (item.type == "firearm") {
+    weapons.forEach((item: Weapon) => {
+      if (item.skill.name.toLowerCase() == "firearm") {
         hasFirearm = true;
       }
     });
@@ -56,7 +57,7 @@ export class InitiativeRecordHandler {
   nextFunction: InitiativeOrderFunction;
   previousFunction: InitiativeOrderFunction;
   constructor(
-    data: InitiativeInterface,
+    data = {combatModifier: 0, roundOrder: 0, playerId: "", id: "", playerName: "", statusEffects: new Map(), dexModifier: 0, firearm: {hasFirearm: false, needsReload: false}, isCurrentTurn: false},
     nextFunction: InitiativeOrderFunction,
     previousFunction: InitiativeOrderFunction
   ) {

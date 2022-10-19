@@ -1,5 +1,6 @@
 import type { Skill } from "./Skills";
 import type { SchemaBase } from "./SchemaBase";
+import type { Weapon } from "../Character/AttackHandler";
 
 export const weaponTypeStrings = {
   damageBonus: "DB",
@@ -26,9 +27,9 @@ export const dbSymbol = Symbol.for(weaponTypeStrings.damageBonus);
 export const burnSymbol = Symbol.for(weaponTypeStrings.burn);
 export const stunSymbol = Symbol.for(weaponTypeStrings.stun);
 
-export const yardsSymbol = Symbol.for(typeof weaponTypeStrings.yard);
+export const yardsSymbol = Symbol.for(weaponTypeStrings.yard);
 
-export type WeaponMap = Map<string, WeaponInterface>;
+export type WeaponMap = Map<string, Weapon>;
 
 export type WeaponTypes =
   | "none"

@@ -3,8 +3,8 @@ import {
   DiceHandler,
   percentileRoller,
   PercentileRollerHandler,
-  roller,
-  skillChallenge,
+  diceRoller,
+  skillChallengeHandler,
   SkillChallengeHandler,
 } from "../../../utilities/DiceRoll";
 import { SchemaBase } from "../SchemaBase";
@@ -134,117 +134,11 @@ export class CharacterBase implements CharacterBaseInterface {
     this.total_sanity_loss = data.total_sanity_loss;
     this.maximum_sanity = data.maximum_sanity;
     this.current_sanity = data.current_sanity;
-    this.roller = roller;
+    this.roller = diceRoller;
     this.percentileRoller = percentileRoller;
-    this.skillChallengeHandler = skillChallenge;
+    this.skillChallengeHandler = skillChallengeHandler;
     this.combat_skills = data.combat_skills ? data.combat_skills : [];
     this.hp = data.hp;
     this.move = data.move;
-  }
-  initialize() {
-    this.setCombatSkills();
-    this.subtractMythosFromSanity();
-  }
-  setCombatSkills() {
-    this.skills.forEach((skill: Skill) => {
-      const index = combatStats
-        .map((value: string) => value)
-        .indexOf(skill.name);
-      if (index > -1) {
-        this.combat_skills.push(skill);
-      } else {
-        return;
-      }
-    });
-  }
-  subtractMythosFromSanity() {
-    const CthulhuMythosNum = this.skills.get("Cthulhu Mythos");
-    if (CthulhuMythosNum != null) {
-      const newSanityMax = this.maximum_sanity - CthulhuMythosNum.reg;
-      this.maximum_sanity = newSanityMax;
-    }
-  }
-  luckRolltoIncreaseLuck() {
-    const luckRoll = this.percentileRoller.rollPercentile();
-    const luck = this.getCharacteristic("luck");
-    const luckReg = luck.reg;
-    const canIncreaseLuck = this.skillChallengeHandler.isFailure(
-      luckRoll,
-      luckReg
-    );
-    if (canIncreaseLuck) {
-      const luckIncreaseAmount = this.roller.privateRollSingle("d10");
-      const newRegLuck = luckReg + luckIncreaseAmount;
-      const [halfValue, fifthValue] =
-        this.calculateHalfandFifthValues(newRegLuck);
-      this.setCharacteristic(
-        { reg: newRegLuck, half: halfValue, fifth: fifthValue },
-        "luck"
-      );
-    }
-    return [canIncreaseLuck, luckRoll];
-  }
-  calculateHalfandFifthValues(regValue: number) {
-    const halfValue = Math.floor(regValue / 2);
-    const fifthValue = Math.floor(regValue / 5);
-    return [halfValue, fifthValue];
-  }
-  getInitiativeObject(): InitiativeInterface {
-    return {
-      id: v4(),
-      investigator_id: this.id,
-      round_order: 0,
-      status_effects: [],
-      dex_modifier: this.characteristics["dex"].reg,
-      firearm: { hasFirearm: this.hasFirearm(), needsReload: false },
-      isCurrentTurn: false,
-      combat_modifier: this.getHighestCombatSkill(),
-      name: this.name,
-    };
-  }
-  hasFirearm() {
-    let hasFirearm = false;
-    this.weapons.forEach((item: Weapon) => {
-      if (item.type == "firearm") {
-        hasFirearm = true;
-      }
-    });
-    return hasFirearm;
-  }
-  getHighestCombatSkill() {
-    this.combat_skills.sort((skillOne: Skill, skillTwo: Skill) => {
-      return skillTwo.reg - skillOne.reg;
-    });
-    return this.combat_skills[0].reg || 0;
-  }
-  subtractPowOrMagicPoints(
-    cost: number,
-    characteristic: Extract<CharacteristicStrings, "pow" | "magic_points">
-  ) {
-    const characteristicCopy = this.getCharacteristic(characteristic);
-    const newRegValue = characteristicCopy.reg - cost;
-    characteristicCopy.reg = newRegValue;
-    this.setCharacteristic(characteristicCopy, characteristic);
-    return this;
-  }
-  getCharacteristic(value: CharacteristicStrings) {
-    return { ...this.characteristics[value] };
-  }
-  setCharacteristic(
-    value: Characteristic,
-    characteristic: CharacteristicStrings
-  ) {
-    this.characteristics[characteristic] = value;
-    return this;
-  }
-  takeDamage(damage: number) {
-    const newHp = this.hp - damage;
-    this.hp = newHp;
-    return this;
-  }
-  healDamage(healing: number) {
-    const newHP = this.hp + healing;
-    this.hp = newHP;
-    return this;
   }
 }

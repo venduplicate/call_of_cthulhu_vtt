@@ -5,11 +5,11 @@ import type {
 } from "../types/InvestigatorTypes";
 import type { ServerSkills, Skill, Skills } from "../types/Skills";
 import { BaseCharacterHandler } from "./BaseHandler";
-import { CharacteristicHandler } from "./CharacteristicHandler";
-import interCharacterHandler, {
+import { CharacteristicHandler, LuckHandler, PowerHandler, StrengthHandler, ConstitutionHandler, DexterityHandler, EducationHandler, SizeHandler, AppearanceHandler, IntelligenceHandler } from "./CharacteristicHandler";
+import emitterBetweenCharacters, {
   InterCharacterEmitter,
 } from "./InterCharacterEmitter";
-import intraCharacterHandler, {
+import {
   IntraCharacterEmitter,
 } from "./IntraCharacterEmitter";
 import { SanityHandler, StatusEffectTracker } from "./StatusEffectHandler";
@@ -17,53 +17,65 @@ import { HealthHandler } from "./HealthHandler";
 import { CharacterInitiativeHandler } from "./CharacterInitiativeHandler";
 import type { InitiativeInterface } from "../types/Initiative";
 import { v4 } from "uuid";
-import type { Weapon } from "./AttackHandler";
+import { WeaponHandler, type Weapon, } from "./AttackHandler";
 import type { WeaponInterface } from "../types/Weapon";
+import { SkillsHandler } from "./SkillHandler";
 
 export class Investigator {
   intraEmitter: IntraCharacterEmitter;
   interEmitter: InterCharacterEmitter;
   baseData: BaseCharacterHandler;
-  characteristics: CharacteristicHandler;
   sanity: SanityHandler;
-  skills: Skills;
+  skills: SkillsHandler;
   statusEffects: StatusEffectTracker;
   backstory: BackStory;
   posessions: any;
   health: HealthHandler;
   initiative: CharacterInitiativeHandler;
-  weapons: Map<string, WeaponInterface>;
-  constructor(data: InvestigatorInterface) {
-    this.interEmitter = interCharacterHandler;
-    this.intraEmitter = intraCharacterHandler;
-    this.baseData = new BaseCharacterHandler(data);
-    this.characteristics = new CharacteristicHandler(data.characteristics);
-    this.sanity = new SanityHandler(data.sanity);
-    this.skills = new Map();
+  weapons: WeaponHandler;
+  luck: LuckHandler;
+  pow: PowerHandler;
+  str: StrengthHandler;
+  con: ConstitutionHandler;
+  dex: DexterityHandler;
+  edu: EducationHandler;
+  siz: SizeHandler;
+  app: AppearanceHandler;
+  int: IntelligenceHandler;
+  constructor() {
+    this.interEmitter = emitterBetweenCharacters;
+    this.intraEmitter = new IntraCharacterEmitter();
+    this.baseData = new BaseCharacterHandler();
+    this.luck = new LuckHandler();
+    this.pow = new PowerHandler();
+    this.str = new StrengthHandler();
+    this.con = new ConstitutionHandler();
+    this.dex = new DexterityHandler();
+    this.edu = new EducationHandler();
+    this.siz = new SizeHandler();
+    this.app = new AppearanceHandler();
+    this.int = new IntelligenceHandler();
+    this.sanity = new SanityHandler();
+    this.skills = new SkillsHandler();
     this.statusEffects = new StatusEffectTracker();
-    this.backstory = data.backstory;
-    this.posessions = data.posessions;
-    this.health = new HealthHandler(data.health.hpCurrent, data.health.hpMax);
+    this.backstory = {} as BackStory; //handler????
+    this.posessions = ""; // create handler for this
+    this.health = new HealthHandler();
     this.initiative = new CharacterInitiativeHandler();
-    // this should be converted into a WeaponHanlder map. 
-    this.weapons = data.weapons;
+    this.weapons = new WeaponHandler();
   }
   get initiativeObject() {
     const initiativeObject: InitiativeInterface = {
       id: v4(),
-      playerId: this.baseData.getId(),
-      playerName: this.baseData.getName(),
-      combatModifier: this.initiative.getHighestCombatModifier(this.skills),
-      dexModifier: this.characteristics.dexHandler.reg,
+      playerId: this.baseData.playerId,
+      playerName: this.baseData.playerNameString,
+      combatModifier: this.initiative.getHighestCombatModifier(this.skills.skillMap),
+      dexModifier: this.dex.reg,
       roundOrder: 0,
       statusEffects: this.statusEffects.effects,
-      // will need to update this once weapon map above is updated
-      firearm: this.initiative.getFirearmObject(this.weapons),
+      firearm: this.initiative.getFirearmObject(this.weapons.weaponsMap),
       isCurrentTurn: false,
     };
     return initiativeObject;
-  }
-  set skillsMap(skills: Skills) {
-    this.skills = new Map(skills);
   }
 }

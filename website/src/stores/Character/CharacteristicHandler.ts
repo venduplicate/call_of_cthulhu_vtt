@@ -31,7 +31,7 @@ export class CharacteristicBase {
   reg: number;
   half: number;
   fifth: number;
-  constructor(characteristic: Characteristic) {
+  constructor(characteristic = { reg: 0, half: 0, fifth: 0 }) {
     this.reg = characteristic.reg;
     this.half = characteristic.half;
     this.fifth = characteristic.fifth;
@@ -39,7 +39,7 @@ export class CharacteristicBase {
   public get attribute() {
     return { reg: this.reg, half: this.half, fifth: this.fifth };
   }
-  update(){
+  update() {
     this.attribute = this.calculateHalfandFifthValues(this.reg)
   }
   private set attribute(newCharacteristic: Characteristic) {
@@ -69,55 +69,55 @@ export class CharacteristicBase {
 }
 
 export class LuckHandler extends CharacteristicBase {
-  constructor(luck: Characteristic) {
+  constructor(luck = {reg: 0, half: 0, fifth: 0} as Characteristic) {
     super(luck);
   }
 }
 
 export class StrengthHandler extends CharacteristicBase {
-  constructor(str: Characteristic) {
+  constructor(str = {reg: 0, half: 0, fifth: 0} as Characteristic) {
     super(str);
   }
 }
 
 export class DexterityHandler extends CharacteristicBase {
-  constructor(dex: Characteristic) {
+  constructor(dex= {reg: 0, half: 0, fifth: 0} as Characteristic) {
     super(dex);
   }
 }
 
 export class ConstitutionHandler extends CharacteristicBase {
-  constructor(con: Characteristic) {
+  constructor(con= {reg: 0, half: 0, fifth: 0} as Characteristic) {
     super(con);
   }
 }
 
 export class SizeHandler extends CharacteristicBase {
-  constructor(siz: Characteristic) {
+  constructor(siz= {reg: 0, half: 0, fifth: 0} as Characteristic) {
     super(siz);
   }
 }
 
 export class AppearanceHandler extends CharacteristicBase {
-  constructor(app: Characteristic) {
+  constructor(app= {reg: 0, half: 0, fifth: 0} as Characteristic) {
     super(app);
   }
 }
 
 export class IntelligenceHandler extends CharacteristicBase {
-  constructor(int: Characteristic) {
+  constructor(int= {reg: 0, half: 0, fifth: 0} as Characteristic) {
     super(int);
   }
 }
 
 export class PowerHandler extends CharacteristicBase {
-  constructor(pow: Characteristic) {
+  constructor(pow= {reg: 0, half: 0, fifth: 0} as Characteristic) {
     super(pow);
   }
 }
 
 export class EducationHandler extends CharacteristicBase {
-  constructor(edu: Characteristic) {
+  constructor(edu= {reg: 0, half: 0, fifth: 0} as Characteristic) {
     super(edu);
   }
 }
