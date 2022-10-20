@@ -1,10 +1,9 @@
 import {
   ChatInputCommandInteraction,
-  Message,
   SlashCommandBuilder,
   SlashCommandStringOption,
 } from "discord.js";
-import sonic from "../../local-events/sonic.js";
+import type { SonicEmitter } from "../../local-events/sonic";
 
 export default {
   data: new SlashCommandBuilder()
@@ -19,7 +18,12 @@ export default {
         .setRequired(true)
     ),
   description: `Roll dice. If you need to roll bonus dice, penalty dice, or percentile dice, use their appropriate commands for ease of use. Use the /help command to get a list of commands.`,
-  async execute(interaction: Message | ChatInputCommandInteraction) {
-    sonic.emit("rollDice", interaction);
+  async execute(sonic: SonicEmitter, interaction: ChatInputCommandInteraction) {
+    const sessionId = interaction.channelId;
+    const notation = interaction.options.getString("roll", true)
+    sonic.emit("rollDiceDiscord", notation,sessionId, async (replyString: string) => {
+      sonic.emit("info",replyString);
+      await interaction.reply(`replyString`);
+    })
   },
 };

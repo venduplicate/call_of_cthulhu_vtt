@@ -31,6 +31,15 @@ export class InvestigatorFirestore extends UserBase {
 
     return { ...docData.data() };
   }
+  async getAllInvestigators(userId: string){
+    const ref = this.getInvestigatorsCollectionRef(userId);
+    const collectionData = await this.getCollectionData(ref)
+    const idArray: Array<{id: string, name: string}> = []
+    collectionData.forEach((doc) => {
+      idArray.push({id: doc.id, name: doc.data().name})
+    })
+    return idArray;
+  }
   async updateInvestigator(
     userId: string,
     investigatorData: InvestigatorInterface

@@ -20,6 +20,7 @@ export class DiscordFirestore extends DBBase {
   }
 }
 
+
 const userDiscordHandler = loggingUtilWrapper(new DiscordFirestore());
 
 export default userDiscordHandler;

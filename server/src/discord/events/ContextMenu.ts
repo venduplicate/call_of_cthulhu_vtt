@@ -8,10 +8,7 @@ import winston from "winston";
 export default {
     name: "interactionCreate",
     once: false,
-    async execute(interaction: ChatInputCommandInteraction,
-      sonic: SonicEmitter,
-      logger: winston.Logger,
-      commands: CommandCollection) {
+    async execute(sonic: SonicEmitter,interaction: ChatInputCommandInteraction) {
       if (!interaction.isUserContextMenuCommand()) return;
 
   }}

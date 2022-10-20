@@ -45,8 +45,9 @@ function functionHandler<T extends Object>(
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function loggingUtilWrapper<T extends Object>(obj: T) {
+const test = new Function(`console.log("test")`)
+
+export function loggingUtilWrapper<T extends {toString: () => string }>(obj: T) {
   return new Proxy(obj, {
     get(target, prop, receiver) {
       const value = target[prop as keyof T];

@@ -11,10 +11,8 @@ export default {
   name: "messageCreate",
   once: false,
   async execute(
-    interaction: Message,
     sonic: SonicEmitter,
-    logger: winston.Logger,
-    commands: CommandCollection
+    interaction: Message,
   ) {
     if (interaction.author.bot) return;
     if (
@@ -23,27 +21,18 @@ export default {
     )
       return;
 
-    sonic.emit("getKeeperClient", async (client: KeeperClient) => {
-      const rollcom = client.commands.get("roll");
-      const mathcom = client.commands.get("maths");
-      try {
-        if (interaction.content.match(mathRegex)) {
-          if (mathcom) {
-            mathcom.execute(interaction, sonic, logger, commands);
-          }
-        }
-        if (interaction.content.match(diceRegex)) {
-          if (rollcom) {
-            rollcom.execute(interaction, sonic, logger, commands);
-          }
-        }
-      } catch (error) {
-        if (error instanceof Error) {
-          logger.alert(error);
-          console.error(error);
-          return;
-        }
-      }
-    });
+    const notation = interaction.content[0];
+
+    const sessionId = interaction.channelId;
+    
+    if (interaction.content.match(mathRegex)) {
+      console.log("test")
+    }
+    if (interaction.content.match(diceRegex)) {
+      sonic.emit("rollDiceDiscord", notation, sessionId, async (replyString: string) => {
+        sonic.emit("info", replyString);
+        await interaction.reply(replyString);
+      })
+    }
   },
 };

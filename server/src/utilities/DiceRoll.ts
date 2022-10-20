@@ -4,7 +4,6 @@ import {
   NumberGenerator,
 } from "@dice-roller/rpg-dice-roller";
 import { loggingUtilWrapper } from "./Logging.js";
-import { RollRedis } from "../data/redis/RollRedis.js";
 
 const textRegex = /[\s+]+[a-zA-Z]+'?[a-zA-Z]+/g;
 const percentileRegex = /(d%|d100)/gi;
@@ -14,13 +13,13 @@ const generator = NumberGenerator.generator;
 
 generator.engine = engines.nativeMath;
 
-type SuccessMessages = {
+export type SuccessMessages = {
   regular: "regular";
   half: "hard";
   fifth: "extreme";
 };
 
-type FailureMessages = {
+export type FailureMessages = {
   fumble: "fumble";
   fail: "fail";
 };
@@ -33,11 +32,11 @@ export class SkillChallengeHandler {
       regular: "regular",
       half: "hard",
       fifth: "extreme",
-    };
+    } as SuccessMessages;
     this.failureMessages = {
       fumble: "fumble",
       fail: "fail",
-    };
+    } as FailureMessages;
   }
   isFailure(rolled: number, regular: number) {
     return rolled > regular;
@@ -85,7 +84,7 @@ export class SkillChallengeHandler {
       case this.isFailure(rolled, regular):
         return this.failureMessages.fail;
       default:
-        return undefined;
+        return "";
     }
   }
 }
@@ -193,14 +192,27 @@ export class DiceHandler {
     );
     return commentString;
   }
-  rollDice(notation: string) {
+  rollMultipleNotations(...notations: string[]) {
+    const diceArray = []
+    for (const record of notations){
+      const { dice, comment } = this.separateDiceAndComment(record);
+      const diceRoll = this.dice.roll(dice) as DiceRoll;
+      let combinedComment = "";
+      if (comment != null) {
+        combinedComment = this.combineComments(comment);
+      }
+      diceArray.push({ diceRoll: diceRoll, comment: combinedComment })
+    }
+   return diceArray;
+  }
+  rollSingleNotation(notation: string){
     const { dice, comment } = this.separateDiceAndComment(notation);
     const diceRoll = this.dice.roll(dice);
     let combinedComment = "";
     if (comment != null) {
       combinedComment = this.combineComments(comment);
     }
-    return { diceRoll: diceRoll, comment: combinedComment };
+    return { diceRoll: diceRoll as DiceRoll, comment: combinedComment };
   }
   privateRollSingle(notation: string) {
     const diceRoll = this.dice.roll(notation) as DiceRoll;
@@ -212,14 +224,9 @@ export function containsPercentile(notation: string) {
   return notation.match(percentileRegex);
 }
 
-export const diceRoller = loggingUtilWrapper(new DiceHandler());
-
-export const percentileRoller = loggingUtilWrapper(
-  new PercentileRollerHandler()
-);
-
-export const skillChallengeHandler = loggingUtilWrapper(
-  new SkillChallengeHandler()
-);
+export const diceRoller = loggingUtilWrapper(new DiceHandler())
 
 
+export const percentileRoller = loggingUtilWrapper(new PercentileRollerHandler())
+
+export const skillChallengeHandler = loggingUtilWrapper(new SkillChallengeHandler())

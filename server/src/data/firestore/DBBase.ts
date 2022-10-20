@@ -1,8 +1,8 @@
-import {
+import type {
   CollectionReference,
   DocumentReference,
 } from "firebase-admin/firestore";
-import { SchemaBase } from "../schemas/SchemaBase.js";
+import type { SchemaBase } from "../schemas/SchemaBase.js";
 import { db } from "./FireBaseAccess.js";
 
 export default class DBBase {

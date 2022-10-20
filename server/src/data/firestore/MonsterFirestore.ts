@@ -1,5 +1,5 @@
 import DBBase from "./DBBase";
-import {  MonsterInterface } from "../schemas/Characters/Monster";
+import type {  MonsterInterface } from "../schemas/Characters/Monster";
 import { FirebaseConverter } from "./Converter";
 export class MonsterFirestore extends DBBase {
   monsters: string;

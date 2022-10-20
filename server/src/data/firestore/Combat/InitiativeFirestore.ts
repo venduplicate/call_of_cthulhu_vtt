@@ -1,6 +1,6 @@
 import { loggingUtilWrapper } from "../../../utilities/Logging.js";
 import { SessionBase } from "./SessionBase.js";
-import {
+import type {
   InitiativeArray,
   InitiativeInterface,
   InitiativeMap,

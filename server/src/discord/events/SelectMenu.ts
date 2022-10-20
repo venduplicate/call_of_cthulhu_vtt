@@ -11,10 +11,8 @@ export default {
   name: "interactionCreate",
   once: false,
   async execute(
-    interaction: SelectMenuInteraction,
     sonic: SonicEmitter,
-    logger: winston.Logger,
-    commands: CommandCollection
+    interaction: SelectMenuInteraction,
   ) {
     try {
       if (!interaction.isSelectMenu()) return;
