@@ -12,8 +12,17 @@ export class SessionBase extends DBBase {
     this.baseName = "sessions";
     this.baseRef = this.db.collection(this.baseName);
   }
+  get collectionString(){
+    return "sessions";
+  }
+  get initiativeCollectionString() {
+    return "initiative"
+  }
+  get customRollCollectionString() {
+    return "rolls"
+  }
   getSessionRef(sessionId: string) {
-    return this.getDocRef(this.baseRef, sessionId);
+    return this.getDocRef(this.getTopRef(this.collectionString), sessionId);
   }
   async getSessionData(sessionId: string) {
     const ref = this.getSessionRef(sessionId);

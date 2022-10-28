@@ -1,8 +1,8 @@
-import { SpellFirestoreInterface } from "../../data/schemas/Spell";
+import { SpellInterface} from "../../data/schemas/Spell";
 import SpellBase from "./SpellBase"
 
 export class ApportionKa extends SpellBase {
-    constructor(data: SpellFirestoreInterface){
+    constructor(data: SpellInterface){
         super(data)
     }
     cast(pow: number, sanity: number, magic_points: number, num_organs: number) {

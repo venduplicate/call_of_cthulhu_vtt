@@ -63,45 +63,4 @@ export default class InitiativeSchema {
     this.isCurrentTurn = data.isCurrentTurn;
     this.combat_modifier = data.combat_modifier;
   }
-  getFirestoreId() {
-    return this.id;
-  }
-  getInvestigatorname() {
-    return this.investigator_name;
-  }
-  getInvestigatorId() {
-    return this.investigator_id;
-  }
-  getRoundOrder() {
-    return this.round_order;
-  }
-  setRoundOrder(value: number) {
-    this.round_order = value;
-    return this;
-  }
-  getStatusEffects() {
-    return [...this.status_effects];
-  }
-  addStatusEffect(newEffect: StatusEffectInterface) {
-    const statusEffects = this.getStatusEffects();
-    statusEffects.push(newEffect);
-    this.status_effects = statusEffects;
-    return this;
-  }
-  getDexModifier() {
-    return this.dex_modifier;
-  }
-  getFirearmStats(): FirearmCombatStats {
-    return { ...this.firearm };
-  }
-  getIsCurrent() {
-    return this.isCurrentTurn;
-  }
-  setIsCurrent(value: boolean) {
-    this.isCurrentTurn = value;
-    return this;
-  }
-  getCombatModifier() {
-    return this.combat_modifier;
-  }
 }

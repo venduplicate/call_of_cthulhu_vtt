@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type {CharacteristicBase } from "../../stores/Character/CharacteristicHandler";
 import { ref, type PropType } from "vue";
+import type { Characteristic } from "../../stores/types/Characteristics";
 
 const props = defineProps({
-  valueData: { type: Object as PropType<CharacteristicBase>, required: true },
+  valueData: { type: Object as PropType<Characteristic>, required: true },
 });
 
 const characteristicRef = ref(props.valueData);

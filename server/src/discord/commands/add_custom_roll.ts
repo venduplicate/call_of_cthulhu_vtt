@@ -34,21 +34,7 @@ export default {
     const sessionId = interaction.channel.id;
     const keyId = `${sonic.createUUID()}:${sessionId}`;
 
-    sonic.emit("addCustomRoll")
-
-    sonic.emit("getRollRedis", (handler: RollRedis) => {
-      sonic.emit("info", "caching roll data in Redis");
-      handler.cacheRoll(keyId, { notation: rollNotation, name: rollName });
-    });
-
-    sonic.emit(
-      "createPlayerSelectMenu",
-      sessionId,
-      keyId,
-      async (selectMenu: ActionRowBuilder<SelectMenuBuilder>) => {
-        sonic.emit("debug", "sending player select menu");
-        await interaction.reply({ content: "", components: [selectMenu] });
-      }
-    );
+    console.log("testing")
+    await interaction.reply("Test")
   },
 };

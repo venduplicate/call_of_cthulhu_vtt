@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import {ref} from "vue";
+
+const props = defineProps({})
 //   import { getContext, onDestroy } from "svelte";
 // import type { Writable } from "svelte/store";
 //   import type { TabTitles as TabType } from "./types/Tabs";

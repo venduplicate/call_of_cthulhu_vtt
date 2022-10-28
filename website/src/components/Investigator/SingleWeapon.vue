@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import RegHalfFifthBoxes from "./RegHalfFifthBoxes.vue";
-import type { Weapon } from "../../stores/types/InvestigatorTypes";
+import type { WeaponInterface } from "../../stores/types/Weapon";
 import { ref, type PropType } from "vue";
 
 const props = defineProps({
-  weaponProp: { type: Object as PropType<Weapon>, required: true },
+  weaponProp: { type: Object as PropType<WeaponInterface>, required: true },
 });
 
 const weapon = ref(props.weaponProp);

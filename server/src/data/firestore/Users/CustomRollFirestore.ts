@@ -7,7 +7,8 @@ export class CustomRollFireStore extends InvestigatorFirestore {
     super();
     this.name = "custom_rolls";
   }
-  getRollRef(userId: string, investigatorId: string) {
+  getRollRef(data: { userId: string, investigatorId: string }) {
+    const { userId, investigatorId } = data;
     const investigatorRef = this.getInvestigatorDocRef(userId, investigatorId);
     return this.getCollectionRef(investigatorRef, this.name);
   }

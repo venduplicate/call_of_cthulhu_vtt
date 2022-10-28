@@ -1,19 +1,14 @@
-import {ApplicationCommandType, ContextMenuCommandBuilder,ContextMenuCommandInteraction, UserContextMenuCommandInteraction} from "discord.js";
-import winston from "winston"
-import type {SonicEmitter} from "../../local-events/sonic.js"
-import {rollDice} from "../functions/RollDice.js"
+
+import { type ContextMenuCommandInteraction, ContextMenuCommandBuilder, ApplicationCommandType } from "discord.js";
+import type { SonicEmitter } from "../../local-events/sonic.js"
 
 export default {
   data: new ContextMenuCommandBuilder()
     .setName("d4").setType(ApplicationCommandType.User),
   description: "Roll a d4",
-  async execute(interaction: UserContextMenuCommandInteraction,sonic: SonicEmitter,logger: winston.Logger, ) {
-    try {
-      rollDice(interaction,sonic,logger)
-      
-    } catch (error) {
-      logger.alert(error)
-    }
+  async execute(sonic: SonicEmitter, interaction: ContextMenuCommandInteraction) {
+    console.log("testing")
+    await interaction.reply("Test")
   },
 };
 

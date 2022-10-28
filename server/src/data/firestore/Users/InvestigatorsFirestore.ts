@@ -14,7 +14,7 @@ export class InvestigatorFirestore extends UserBase {
     this.investigators = "investigators";
   }
   getInvestigatorsCollectionRef(userId: string) {
-    return this.getUserRef(userId).collection(this.investigators);
+    return this.getUserDocRef(userId).collection(this.investigators);
   }
   getInvestigatorDocRef(userId: string, investigatorId: string) {
     return this.getDocRef(

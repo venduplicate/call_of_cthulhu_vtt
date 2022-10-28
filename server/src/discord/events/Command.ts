@@ -5,13 +5,10 @@ import type { SonicEmitter } from "../../local-events/sonic.js";
 export default {
   name: "interactionCreate",
   once: false,
-  async execute(sonic: SonicEmitter, interaction: ChatInputCommandInteraction) {
+  async execute(commands: CommandCollection,sonic: SonicEmitter, interaction: ChatInputCommandInteraction) {
     if (!interaction.isChatInputCommand()) return;
-    sonic.emit("getCommands", async (commands: CommandCollection) => {
-      const command = commands.get(interaction.commandName);
-      if (!command) {
-        return;
-      }
+    const command = commands.get(interaction.commandName);
+    if (!command) return;
       try {
         command.execute(sonic, interaction);
       } catch (error) {
@@ -22,6 +19,5 @@ export default {
           content: "There was an error while executing this command!",
         });
       }
-    });
   },
 };

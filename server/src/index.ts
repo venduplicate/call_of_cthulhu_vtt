@@ -23,6 +23,12 @@ app.use(
 
 app.use(express.json());
 
+app.get("/user/investigators", (req, res) => {
+  // const dbCall = new DB();
+  // const investigator = dbcall.getInvestigator(userId, investigatorId);
+  // res.json(investigator)
+})
+
 export const io = await socketInit(server);
 keeper.init();
 sonic.init();

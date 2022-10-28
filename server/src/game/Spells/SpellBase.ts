@@ -1,9 +1,9 @@
-import {SpellFirestoreInterface,SpellSchema} from "../../data/schemas/Spell.js"
-import {roller} from "../../utilities/DiceRoll.js";
+import {SpellInterface,SpellSchema} from "../../data/schemas/Spell.js"
+import {diceRoller} from "../../utilities/DiceRoll.js";
 import {isNumeric, isString} from "../../utilities/TypeChecking";
 
 class SpellBase extends SpellSchema {
-    constructor(data: SpellFirestoreInterface){
+    constructor(data: SpellInterface){
         super(data)
     }
     subtract_pow(pow: number) {
@@ -11,7 +11,7 @@ class SpellBase extends SpellSchema {
     }
     subtract_san(sanity: number) {
         if (isString(this.sanity_cost)){
-            const roll = roller.privateRoll(this.sanity_cost);
+            const roll = diceRoller.privateRollSingle(this.sanity_cost);
             return sanity - roll
         }
         if (isNumeric(this.sanity_cost)){
@@ -20,7 +20,7 @@ class SpellBase extends SpellSchema {
     }
     subtract_magic_points(magic_points: number) {
         if (isString(this.magic_point_cost)){
-            const roll = roller.privateRoll(this.magic_point_cost);
+            const roll = diceRoller.privateRollSingle(this.magic_point_cost);
             return magic_points - roll
         }
         if (isNumeric(this.magic_point_cost)){
@@ -37,7 +37,7 @@ const SpellFunctions = {
     },
     subtract_san: function(sanity: number,sanity_cost: number) {
         if (isString(sanity_cost)){
-            const roll = roller.privateRoll(sanity_cost);
+            const roll = diceRoller.privateRollSingle(sanity_cost);
             return sanity - roll
         }
         if (isNumeric(sanity_cost)){
@@ -46,7 +46,7 @@ const SpellFunctions = {
     },
     subtract_magic_points(magic_points: number, magic_point_cost: number) {
         if (isString(magic_point_cost)){
-            const roll = roller.privateRoll(magic_point_cost);
+            const roll = diceRoller.privateRollSingle(magic_point_cost);
             return magic_points - roll
         }
         if (isNumeric(magic_point_cost)){
